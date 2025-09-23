@@ -1,0 +1,44 @@
+package com.back_end.english_app.entity;
+
+import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
+
+import java.time.LocalDateTime;
+
+@Entity
+@Table(name = "vocab_exercise_types")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class VocabExerciseTypeEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    Long id;
+
+    @Column(nullable = false, length = 100)
+    String name;
+
+    @ManyToOne
+    @JoinColumn(name = "topic_id", nullable = false)
+    VocabTopicEntity topic;
+
+    @Column(columnDefinition = "TEXT")
+    String description;
+
+    @Column(columnDefinition = "TEXT")
+    String instruction;
+
+    @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT TRUE")
+    Boolean isActive = true;
+
+    @CreationTimestamp
+    @Column(name = "created_at", nullable = false, updatable = false)
+    LocalDateTime createdAt;
+}
