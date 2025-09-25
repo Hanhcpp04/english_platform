@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/EnglishSmartBE.iml" filepath="$PROJECT_DIR$/.idea/EnglishSmartBE.iml" />
+      <module fileurl="file://$PROJECT_DIR$/english_app/english_app.iml" filepath="$PROJECT_DIR$/english_app/english_app.iml" />
     </modules>
   </component>
 </project>
