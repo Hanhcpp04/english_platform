@@ -13,7 +13,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "user")
+@Table(name = "users")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -41,7 +41,7 @@ public class UserEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "ENUM('ADMIN', 'USER') DEFAULT 'USER'")
-    RoleEntity role = RoleEntity.USER;
+    Role role = Role.USER;
 
     @Column(name = "google_id", unique = true)
     String googleId;

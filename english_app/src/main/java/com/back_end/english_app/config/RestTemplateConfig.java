@@ -1,16 +1,13 @@
 package com.back_end.english_app.config;
 
-import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class RestTemplateConfig {
-
+    // dùng để gọi đến các api từ bên ngoài
     @Bean
-    public RestTemplate restTemplate(RestTemplateBuilder builder) {
-        return builder.build();
+    public RestTemplateConfig restTemplate() {
+        return new RestTemplateConfig();
     }
 }
-

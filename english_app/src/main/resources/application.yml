@@ -1,19 +1,17 @@
 server:
-  port: 8081
-
+  port: 8088
 spring:
-  application:
-    name: backend-service
-  profiles:
-    active: @spring.profiles.active@
+  datasource:
+    url: jdbc:mysql://localhost:3306/english_platform?useSSL=false&serverTimezone=UTC
+    username: root
+    password: ""
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
-management:
-  endpoints:
-    web:
-      exposure:
-        include: '*'
-
-logging:
-  level:
-    root: INFO
-    web: INFO
+    jpa:
+      hibernate:
+        ddl-auto: update
+      show-sql: true
+      properties:
+        hibernate:
+          format_sql: true
+          dialect: org.hibernate.dialect.MySQL8Dialect
