@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 @Entity
-@Table( name = "levels")
+@Table( name = "level")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
