@@ -15,10 +15,10 @@ public class APIResponse<T> {
     int code = 1000;
     String message;
     T result;
-    public static <T> APIResponse<T> notFound(){
+    public static <T> APIResponse<T> notFound(String s){
         return APIResponse.<T>builder()
                 .code(404)
-                .message("Error not found 404")
+                .message(s)
                 .result(null)
                 .build();
     }

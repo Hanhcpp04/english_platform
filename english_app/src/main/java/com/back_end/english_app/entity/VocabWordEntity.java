@@ -12,7 +12,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "vocab_word")
+@Table(name = "vocab_words")
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -50,8 +50,8 @@ public class VocabWordEntity {
     @Column(name = "word_type", length = 100)
     String wordType;
 
-    @Column(name = "xp_reward", columnDefinition = "INT DEFAULT 3")
-    Integer xpReward = 3;
+    @Column(name = "xp_reward", columnDefinition = "INT DEFAULT 5")
+    Integer xpReward = 5;
 
     @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT TRUE")
     Boolean isActive = true;

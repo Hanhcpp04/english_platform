@@ -24,13 +24,16 @@ public class VocabTopicEntity {
     Long id;
 
     @Column(nullable = false)
+    String englishName;
+
+    @Column(nullable = false)
     String name;
 
     @Column(columnDefinition = "TEXT")
     String description;
 
-    @Column(name = "thumbnail_url", length = 500)
-    String thumbnailUrl;
+    @Column(name = "icon_url", length = 500)
+    String icon_url;
 
     @Column(name = "xp_reward", columnDefinition = "INT DEFAULT 100")
     Integer xpReward = 100;
@@ -40,7 +43,6 @@ public class VocabTopicEntity {
 
     @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT TRUE")
     Boolean isActive = true;
-
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     LocalDateTime createdAt;
