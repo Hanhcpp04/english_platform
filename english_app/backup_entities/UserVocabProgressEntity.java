@@ -1,5 +1,3 @@
-package com.back_end.english_app.entity;
-
 import com.back_end.english_app.entity.*;
 import jakarta.persistence.*;
 import lombok.AccessLevel;

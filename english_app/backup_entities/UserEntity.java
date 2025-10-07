@@ -55,15 +55,6 @@ public class UserEntity {
     @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT TRUE")
     Boolean isActive = true;
 
-    @Column(name = "is_email_verified", columnDefinition = "BOOLEAN DEFAULT FALSE")
-    Boolean isEmailVerified = false;
-
-    @Column(name = "email_verification_token")
-    String emailVerificationToken;
-
-    @Column(name = "email_verification_token_expires_at")
-    LocalDateTime emailVerificationTokenExpiresAt;
-
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     LocalDateTime createdAt;
