@@ -11,8 +11,6 @@ import java.util.List;
 
 public interface UserBadgeRepository extends JpaRepository<UserBadgeEntity, Long> {
     List<UserBadgeEntity> findByUserId(Long userId);
-@Repository
-public interface UserBadgeRepository extends JpaRepository<UserBadgeEntity , Long> {
 
     @Query("SELECT ub FROM UserBadgeEntity ub " +
             "WHERE ub.user.id = :userId " +
