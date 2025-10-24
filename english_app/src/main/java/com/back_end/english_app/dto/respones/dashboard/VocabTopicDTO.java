@@ -14,6 +14,7 @@ import java.time.LocalDateTime;
 public class VocabTopicDTO {
     private Long id;
     private String name;
+    private String englishName;
     private String description;
     private String iconUrl;
     private Integer xpReward;

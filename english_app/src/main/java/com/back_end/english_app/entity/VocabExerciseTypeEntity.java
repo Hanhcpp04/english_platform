@@ -9,6 +9,7 @@ import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "vocab_exercise_types")
@@ -25,9 +26,8 @@ public class VocabExerciseTypeEntity {
     @Column(nullable = false, length = 100)
     String name;
 
-    @ManyToOne
-    @JoinColumn(name = "topic_id", nullable = false)
-    VocabTopicEntity topic;
+    @ManyToMany(mappedBy = "exerciseTypes")
+    List<VocabTopicEntity> topics;
 
     @Column(columnDefinition = "TEXT")
     String description;

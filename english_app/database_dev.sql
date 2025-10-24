@@ -109,6 +109,8 @@ CREATE TABLE vocab_exercise_questions (
     id INT PRIMARY KEY AUTO_INCREMENT,
     type_id INT NOT NULL,
     word_id INT NULL,
+    topic_id BIGINT(20) NOT NULL,
+
     question TEXT NOT NULL,
     options JSON NULL,
     correct_answer TEXT NOT NULL,
@@ -117,14 +119,17 @@ CREATE TABLE vocab_exercise_questions (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     FOREIGN KEY (type_id) REFERENCES vocab_exercise_type(id) ON DELETE CASCADE,
     FOREIGN KEY (word_id) REFERENCES vocab_words(id) ON DELETE CASCADE,
+    FOREIGN KEY (topic_id) REFERENCES vocab_topics(id) ON DELETE CASCADE,
     INDEX idx_type_active (type_id, is_active),
-    INDEX idx_word (word_id)
+    INDEX idx_word (word_id),
+    INDEX idx_topic_active (topic_id, is_active)
+
 );
 
 CREATE TABLE vocab_user_progress (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
-    word_id INT NOT NULL,
+    word_id INT NULL,
     topic_id INT NOT NULL,
     question_id INT NULL,
     type ENUM('flashcard','exercise') NOT NULL,

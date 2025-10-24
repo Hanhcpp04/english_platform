@@ -3,6 +3,9 @@ package com.back_end.english_app.controller.vocab;
 import com.back_end.english_app.config.APIResponse;
 import com.back_end.english_app.dto.request.vocab.CompleteWordRequest;
 import com.back_end.english_app.dto.respones.vocab.VocabWordResponse;
+import com.back_end.english_app.entity.UserEntity;
+import com.back_end.english_app.exception.ResourceNotFoundException;
+import com.back_end.english_app.repository.UserRepository;
 import com.back_end.english_app.service.VocabWordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -15,13 +18,14 @@ import java.util.List;
 public class VocabController {
 
     private final VocabWordService vocabWordService;
-
+    private final UserRepository userRepository;
 //     API lấy tất cả từ vựng theo topic với trạng thái hoàn thành
     @GetMapping("/topic/{topicId}/words")
     public APIResponse<List<VocabWordResponse>> getWordsByTopic(
             @PathVariable Long topicId,
             @RequestParam Long userId) {
-
+        UserEntity user = userRepository.findByIdAndIsActiveTrue(userId)
+                .orElseThrow(()-> new ResourceNotFoundException("Nguoi dung k ton tai "));
         List<VocabWordResponse> words = vocabWordService.getWordsByTopicWithProgress(topicId, userId);
 
         return APIResponse.<List<VocabWordResponse>>builder()
@@ -35,6 +39,8 @@ public class VocabController {
     public APIResponse<VocabWordResponse> completeWord(
             @RequestBody CompleteWordRequest request,
             @RequestParam Long userId) {
+        UserEntity user = userRepository.findByIdAndIsActiveTrue(userId)
+                .orElseThrow(()-> new ResourceNotFoundException("Nguoi dung k ton tai "));
         VocabWordResponse response = vocabWordService.completeWord(request, userId);
         return APIResponse.<VocabWordResponse>builder()
                         .code(200)

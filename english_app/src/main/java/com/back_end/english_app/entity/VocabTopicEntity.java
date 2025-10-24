@@ -10,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "vocab_topics")
@@ -50,4 +51,12 @@ public class VocabTopicEntity {
     @UpdateTimestamp
     @Column(name = "updated_at")
     LocalDateTime updatedAt;
+
+    @ManyToMany
+    @JoinTable(
+            name = "topic_exercise_type",
+            joinColumns = @JoinColumn(name = "topic_id"),
+            inverseJoinColumns = @JoinColumn(name = "exercise_type_id")
+    )
+    List<VocabExerciseTypeEntity> exerciseTypes;
 }
