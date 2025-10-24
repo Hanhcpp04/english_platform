@@ -1,5 +1,9 @@
 HELP.md
 target/
+351203812285-u0185qnostcdqvnrfbqn0u1ss8tspbg9.apps.googleusercontent.com
+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
+# .gitignore
+.env
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/

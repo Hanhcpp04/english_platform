@@ -23,6 +23,9 @@ public class VocabStatsDTO {
     public static class TopicProgressDTO {
         Long topicId;
         String topicName;
+        String englishName;
+        String iconUrl;
+        String description;
         Integer totalWords;
         Integer wordsLearned;
         Integer xpEarned;

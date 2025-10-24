@@ -44,4 +44,20 @@ public interface VocabUserProgressRepository extends JpaRepository<VocabUserProg
 
     // Lấy tất cả progress của user trong một topic
     List<VocabUserProgress> findByUserIdAndTopicId(Long userId, Long topicId);
+
+    // Lấy progress theo user, topic và type (flashcard hoặc exercise)
+    @Query("SELECT vup FROM VocabUserProgress vup " +
+            "WHERE vup.user.id = :userId AND vup.topic.id = :topicId AND vup.type = :type")
+    List<VocabUserProgress> findByUserIdAndTopicIdAndType(
+            @Param("userId") Long userId,
+            @Param("topicId") Long topicId,
+            @Param("type") VocabUserProgress.ProgressType type);
+
+    // Lấy progress theo user, question và type
+    @Query("SELECT vup FROM VocabUserProgress vup " +
+            "WHERE vup.user.id = :userId AND vup.question.id = :questionId AND vup.type = :type")
+    Optional<VocabUserProgress> findByUserIdAndQuestionIdAndType(
+            @Param("userId") Long userId,
+            @Param("questionId") Long questionId,
+            @Param("type") VocabUserProgress.ProgressType type);
 }

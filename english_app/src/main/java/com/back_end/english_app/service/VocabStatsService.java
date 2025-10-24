@@ -84,11 +84,14 @@ public class VocabStatsService {
                             ? (wordsLearned * 100.0 / totalWords)
                             : 0.0;
 
-                    Integer xpEarned = wordsLearned * 3; // Giả sử mỗi từ = 3 XP
+                    Integer xpEarned = wordsLearned * 5;
 
                     VocabStatsDTO.TopicProgressDTO progress = VocabStatsDTO.TopicProgressDTO.builder()
                             .topicId(topic.getId())
                             .topicName(topic.getName())
+                            .englishName(topic.getEnglishName())
+                            .iconUrl(topic.getIcon_url())
+                            .description(topic.getDescription())
                             .totalWords(totalWords)
                             .wordsLearned(wordsLearned)
                             .xpEarned(xpEarned)
@@ -220,6 +223,7 @@ public class VocabStatsService {
                             return TopicWithProgressDTO.builder()
                                     .id(topic.getId())
                                     .name(topic.getName())
+                                    .englishName(topic.getEnglishName())
                                     .description(topic.getDescription())
                                     .iconUrl(topic.getIcon_url())
                                     .xpReward(topic.getXpReward())
@@ -260,6 +264,7 @@ public class VocabStatsService {
             return VocabTopicDTO.builder()
                     .id(entity.getId())
                     .name(entity.getName())
+                    .englishName(entity.getEnglishName())
                     .description(entity.getDescription())
                     .iconUrl(entity.getIcon_url())
                     .xpReward(entity.getXpReward())

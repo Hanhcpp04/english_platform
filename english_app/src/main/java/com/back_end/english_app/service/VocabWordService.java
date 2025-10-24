@@ -39,7 +39,9 @@ public class VocabWordService {
         List<VocabUserProgress> progressList = vocabUserProgressRepository.findByUserIdAndTopicId(userId, topicId);
 
         // Tạo map để tra cứu nhanh trạng thái hoàn thành
+        // ✅ FIX: Lọc bỏ các progress không có word (word_id = NULL) để tránh NullPointerException
         Map<Long, Boolean> completionMap = progressList.stream()
+                .filter(progress -> progress.getWord() != null)  // ✅ Chỉ lấy progress có word
                 .collect(Collectors.toMap(
                     progress -> progress.getWord().getId(),
                     VocabUserProgress::getIsCompleted,
@@ -118,4 +120,3 @@ public class VocabWordService {
                 .build();
     }
 }
-

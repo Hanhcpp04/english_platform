@@ -43,6 +43,8 @@ public class UserEntity {
     @Column(columnDefinition = "ENUM('ADMIN', 'USER') DEFAULT 'USER'")
     Role role = Role.USER;
 
+    String provider;
+
     @Column(name = "google_id", unique = true)
     String googleId;
 

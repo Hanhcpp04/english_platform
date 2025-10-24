@@ -29,10 +29,6 @@ public class VocabExerciseQuestionEntity {
     @JoinColumn(name = "type_id", nullable = false)
     VocabExerciseTypeEntity type;
 
-    @ManyToOne
-    @JoinColumn(name = "word_id")
-    VocabWordEntity word;
-
     @Column(nullable = false, columnDefinition = "TEXT")
     String question;
 

@@ -25,7 +25,7 @@ public class VocabUserProgress {
     UserEntity user;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "word_id", nullable = false)
+    @JoinColumn(name = "word_id", nullable = true)
     VocabWordEntity word;
 
     @ManyToOne(fetch = FetchType.LAZY)

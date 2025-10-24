@@ -1,0 +1,155 @@
+package com.back_end.english_app.controller.user;
+import com.back_end.english_app.config.APIResponse;
+import com.back_end.english_app.dto.request.auth.AuthRequest;
+import com.back_end.english_app.dto.request.auth.RefreshTokenRequest;
+import com.back_end.english_app.dto.request.auth.RegisterRequestDTO;
+import com.back_end.english_app.dto.respones.auth.AuthResponse;
+import com.back_end.english_app.dto.respones.auth.UserResponse;
+import com.back_end.english_app.entity.RefreshTokenEntity;
+import com.back_end.english_app.entity.Role;
+import com.back_end.english_app.entity.UserEntity;
+import com.back_end.english_app.repository.UserRepository;
+import com.back_end.english_app.security.jwt.JwtUtil;
+import com.back_end.english_app.service.RefreshTokenService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.*;
+import java.util.Optional;
+@RestController
+@RequestMapping("/auth")
+@RequiredArgsConstructor
+public class AuthController {
+    private final AuthenticationManager authenticationManager;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
+    private final RefreshTokenService refreshTokenService;
+
+    @PostMapping("/register")
+    public APIResponse<?> register(@RequestBody RegisterRequestDTO request) {
+        // Kiểm tra email đã tồn tại
+        Optional<UserEntity> existingUser = userRepository.findByEmailAndIsActiveTrue(request.getEmail());
+        if (existingUser.isPresent()) {
+            return APIResponse.error("Email này đã tồn tại trong cơ sở dữ liệu");
+        }
+        // Tạo user mới
+        UserEntity userNew = new UserEntity();
+        userNew.setEmail(request.getEmail());
+        userNew.setPasswordHash(passwordEncoder.encode(request.getPassword()));
+        userNew.setUsername(request.getUsername());
+        userNew.setFullname(request.getFullname());
+        userNew.setProvider("LOCAL");
+        userNew.setRole(Role.USER);
+        userNew.setIsActive(true);
+
+        userRepository.save(userNew);
+
+        return APIResponse.success(userNew);
+    }
+
+    @PostMapping("/login")
+    public APIResponse<AuthResponse> login(@RequestBody AuthRequest request){
+        UserEntity user = userRepository.findByEmailAndIsActiveTrue(request.getEmail())
+                .orElseThrow(() -> new RuntimeException("Người dùng không tồn tại hoặc chưa kích hoạt"));
+        Authentication authentication = authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        request.getEmail(),
+                        request.getPassword()
+                )
+        );
+
+        // Tạo access token
+        String accessToken = jwtUtil.generateAccessToken(authentication);
+
+        // Tạo refresh token
+        RefreshTokenEntity refreshToken = refreshTokenService.createRefreshToken(user);
+
+        return APIResponse.success(new AuthResponse(
+                user.getId(),
+                user.getEmail(),
+                user.getAvatar(),
+                user.getFullname(),
+                user.getUsername(),
+                user.getRole().name(),
+                user.getTotalXp(),
+                user.getIsActive(),
+                accessToken,
+                refreshToken.getToken()
+        ));
+    }
+
+    @PostMapping("/refresh")
+    public APIResponse<AuthResponse> refreshToken(@RequestBody RefreshTokenRequest request) {
+        String requestRefreshToken = request.getRefreshToken();
+
+        return refreshTokenService.findByToken(requestRefreshToken)
+                .map(refreshToken -> {
+                    // Kiểm tra refresh token có hết hạn không
+                    if (!refreshTokenService.verifyExpiration(refreshToken)) {
+                        return APIResponse.<AuthResponse>error("Refresh token đã hết hạn. Vui lòng đăng nhập lại!");
+                    }
+
+                    UserEntity user = refreshToken.getUser();
+
+                    // Tạo access token mới
+                    String newAccessToken = jwtUtil.generateAccessTokenFromEmail(
+                            user.getId(),
+                            user.getEmail(),
+                            "ROLE_" + user.getRole().name()
+                    );
+
+                    // Tạo refresh token mới
+                    RefreshTokenEntity newRefreshToken = refreshTokenService.createRefreshToken(user);
+
+                    return APIResponse.success(new AuthResponse(
+                            user.getId(),
+                            user.getEmail(),
+                            user.getAvatar(),
+                            user.getFullname(),
+                            user.getUsername(),
+                            user.getRole().name(),
+                            user.getTotalXp(),
+                            user.getIsActive(),
+                            newAccessToken,
+                            refreshToken.getToken()
+                    ));
+                })
+                .orElseGet(() -> APIResponse.error("Refresh token không tồn tại!"));
+    }
+
+    @PostMapping("/logout")
+    public APIResponse<?> logout(@RequestBody RefreshTokenRequest request) {
+        refreshTokenService.deleteByToken(request.getRefreshToken());
+        return APIResponse.success("Đăng xuất thành công!");
+    }
+
+    @GetMapping("/me")
+    public APIResponse<?> getCurrentUser(Authentication authentication) {
+        if (authentication == null) {
+            return APIResponse.error("Unauthorized");
+        }
+
+        String email = authentication.getName();
+        UserEntity user = userRepository.findByEmailAndIsActiveTrue(email).orElseThrow();
+
+        return APIResponse.success( new UserResponse(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getFullname(),
+                user.getAvatar(),
+                user.getRole().name(),
+                user.getProvider(),
+                user.getGoogleId(),
+                user.getFacebookId(),
+                user.getTotalXp(),
+                user.getIsActive(),
+                user.getCreatedAt(),
+                user.getUpdatedAt()
+        ));
+    }
+}
