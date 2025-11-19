@@ -1,4 +1,4 @@
-package com.back_end.english_app.dto;
+package com.back_end.english_app.dto.respones.grammar;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

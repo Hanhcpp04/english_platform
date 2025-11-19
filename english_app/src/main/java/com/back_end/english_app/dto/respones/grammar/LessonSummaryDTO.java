@@ -1,4 +1,4 @@
-package com.back_end.english_app.dto;
+package com.back_end.english_app.dto.respones.grammar;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class LessonSummaryDTO {
+    private Integer totalLessons;
     private Integer inProgress;
     private Integer completedLessons;
     private Integer notStarted;

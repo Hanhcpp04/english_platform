@@ -1,24 +1,32 @@
 package com.back_end.english_app.controller.user;
+
 import com.back_end.english_app.config.APIResponse;
 import com.back_end.english_app.dto.request.auth.AuthRequest;
 import com.back_end.english_app.dto.request.auth.RefreshTokenRequest;
 import com.back_end.english_app.dto.request.auth.RegisterRequestDTO;
 import com.back_end.english_app.dto.respones.auth.AuthResponse;
+import com.back_end.english_app.dto.respones.auth.LevelResponse;
 import com.back_end.english_app.dto.respones.auth.UserResponse;
+import com.back_end.english_app.dto.respones.auth.UserStreakResponse;
 import com.back_end.english_app.entity.RefreshTokenEntity;
 import com.back_end.english_app.entity.Role;
 import com.back_end.english_app.entity.UserEntity;
+import com.back_end.english_app.entity.LevelEntity;
+import com.back_end.english_app.entity.UserStreakEntity;
 import com.back_end.english_app.repository.UserRepository;
+import com.back_end.english_app.repository.LevelRepository;
 import com.back_end.english_app.security.jwt.JwtUtil;
 import com.back_end.english_app.service.RefreshTokenService;
+import com.back_end.english_app.service.UserStreakService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.Optional;
+
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -28,6 +36,8 @@ public class AuthController {
     private final PasswordEncoder passwordEncoder;
     private final JwtUtil jwtUtil;
     private final RefreshTokenService refreshTokenService;
+    private final LevelRepository levelRepository;
+    private final UserStreakService userStreakService;
 
     @PostMapping("/register")
     public APIResponse<?> register(@RequestBody RegisterRequestDTO request) {
@@ -55,12 +65,17 @@ public class AuthController {
     public APIResponse<AuthResponse> login(@RequestBody AuthRequest request){
         UserEntity user = userRepository.findByEmailAndIsActiveTrue(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("Người dùng không tồn tại hoặc chưa kích hoạt"));
+
+        // Authenticate trước
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(
                         request.getEmail(),
                         request.getPassword()
                 )
         );
+
+        // Chỉ cập nhật streak sau khi authenticate thành công
+        userStreakService.updateStreak(user);
 
         // Tạo access token
         String accessToken = jwtUtil.generateAccessToken(authentication);
@@ -115,7 +130,7 @@ public class AuthController {
                             user.getTotalXp(),
                             user.getIsActive(),
                             newAccessToken,
-                            refreshToken.getToken()
+                            newRefreshToken.getToken()
                     ));
                 })
                 .orElseGet(() -> APIResponse.error("Refresh token không tồn tại!"));
@@ -136,7 +151,35 @@ public class AuthController {
         String email = authentication.getName();
         UserEntity user = userRepository.findByEmailAndIsActiveTrue(email).orElseThrow();
 
-        return APIResponse.success( new UserResponse(
+        // Tìm level của user dựa trên totalXp
+        LevelResponse levelResponse = null;
+        if (user.getTotalXp() != null) {
+            Optional<LevelEntity> levelOpt = levelRepository.findLevelByTotalXp(user.getTotalXp());
+            if (levelOpt.isPresent()) {
+                LevelEntity level = levelOpt.get();
+                levelResponse = LevelResponse.builder()
+                        .levelNumber(level.getLevelNumber())
+                        .levelName(level.getLevelName())
+                        .minXp(level.getMinXp())
+                        .maxXp(level.getMaxXp())
+                        .description(level.getDescription())
+                        .iconUrl(level.getIconUrl())
+                        .build();
+            }
+        }
+
+        // Lấy thông tin streak của user (luôn trả về, không bao giờ null)
+        UserStreakEntity streak = userStreakService.getUserStreak(user.getId());
+        UserStreakResponse streakResponse = UserStreakResponse.builder()
+                .currentStreak(streak.getCurrentStreak())
+                .longestStreak(streak.getLongestStreak())
+                .lastActivityDate(streak.getLastActivityDate())
+                .streakStartDate(streak.getStreakStartDate())
+                .longestStreakDate(streak.getLongestStreakDate())
+                .totalStudyDays(streak.getTotalStudyDays())
+                .build();
+
+        return APIResponse.success(new UserResponse(
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
@@ -149,7 +192,10 @@ public class AuthController {
                 user.getTotalXp(),
                 user.getIsActive(),
                 user.getCreatedAt(),
-                user.getUpdatedAt()
+                user.getUpdatedAt(),
+                levelResponse,
+                streakResponse
         ));
     }
 }
+

@@ -27,7 +27,7 @@ public class VocabWordService {
     private final VocabUserProgressRepository vocabUserProgressRepository;
     private final UserRepository userRepository;
     private final VocabTopicRepository vocabTopicRepository;
-
+    private final BadgeCheckService badgeCheckService;
 
 //     Lấy tất cả từ vựng theo topic với trạng thái hoàn thành của user
 
@@ -102,6 +102,7 @@ public class VocabWordService {
             // Cộng XP cho user
             user.setTotalXp(user.getTotalXp() + word.getXpReward());
             userRepository.save(user);
+            badgeCheckService.checkAndUpdateBadges(userId, "VOCABULARY");
         }
 
         // Trả về response

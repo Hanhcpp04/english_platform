@@ -8,6 +8,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserBadgeRepository extends JpaRepository<UserBadgeEntity , Long> {
@@ -21,7 +22,14 @@ public interface UserBadgeRepository extends JpaRepository<UserBadgeEntity , Lon
             "WHERE ub.user.id = :userId")
     List<UserBadgeEntity> findAllByUserId(@Param("userId") Long userId);
 
-    Long countByUserId(Long userId);
+    @Query("SELECT COUNT(ub) FROM UserBadgeEntity ub WHERE ub.user.id = :userId")
+    Long countByUserId(@Param("userId") Long userId);
 
-    boolean existsByUserIdAndBadgeId(Long userId, Long badgeId);
+    @Query("SELECT CASE WHEN COUNT(ub) > 0 THEN true ELSE false END FROM UserBadgeEntity ub " +
+            "WHERE ub.user.id = :userId AND ub.badge.id = :badgeId")
+    boolean existsByUserIdAndBadgeId(@Param("userId") Long userId, @Param("badgeId") Long badgeId);
+
+    @Query("SELECT ub FROM UserBadgeEntity ub " +
+            "WHERE ub.user.id = :userId AND ub.badge.id = :badgeId")
+    Optional<UserBadgeEntity> findByUserIdAndBadgeId(@Param("userId") Long userId, @Param("badgeId") Long badgeId);
 }

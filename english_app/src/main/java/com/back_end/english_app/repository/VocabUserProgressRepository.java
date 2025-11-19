@@ -11,6 +11,7 @@ import java.util.Optional;
 
 @Repository
 public interface VocabUserProgressRepository extends JpaRepository<VocabUserProgress , Long> {
+    int countByUserIdAndIsCompletedTrue(Long userId);
     // mà một người dùng đã học
     @Query("SELECT COUNT(DISTINCT vup.word.id) FROM VocabUserProgress vup " +
             "WHERE vup.user.id = :userId AND vup.isCompleted = true")

@@ -9,37 +9,30 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
-@Table(name = "writing_categories",
+@Table(name = "writing_topic",
         indexes = {
                 @Index(name = "idx_active", columnList = "is_active")
         })
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class WritingCategoryEntity {
+public class WritingTopicEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 100)
     private String name;
 
-    @Column(columnDefinition = "TEXT")
-    private String question;
-
-    @Column(columnDefinition = "TEXT")
-    private String writingTips;
-
-    @Column(name = "xp_reward")
-    private Integer xpReward;
-
-    @Column(name = "is_completed")
-    private Boolean isCompleted;
-
     @Column(name = "is_active")
-    private Boolean isActive;
+    private Boolean isActive = true;
 
     @Column(name = "created_at")
     private LocalDateTime createdAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+    }
 }
