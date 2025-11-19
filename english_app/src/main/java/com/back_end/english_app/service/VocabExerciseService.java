@@ -18,8 +18,9 @@ import java.util.List;
 public class VocabExerciseService {
 
     private final VocabExerciseRepository repository;
+    private final BadgeCheckService badgeCheckService;
 
-    // 1. Get exercise types by topic
+    // lấy câu hỏi theo từng loại và thuộc về topic nào của user nào
     public List<ExerciseTypeDTO> getExerciseTypesByTopic(Integer topicId, Integer userId) {
         List<ExerciseTypeDTO> exerciseTypes = repository.getExerciseTypesByTopic(topicId, userId);
 
@@ -30,7 +31,7 @@ public class VocabExerciseService {
         return exerciseTypes;
     }
 
-    // 2. Get questions by type
+    // 2. lấy các câu hỏi theo loại câu hỏi nào của từng topic và của user nào
     public QuestionsResponse getQuestionsByType(Integer typeId, Integer topicId, Integer userId) {
         QuestionsResponse response = repository.getQuestionsByTypeAndTopic(typeId, topicId, userId);
 
@@ -39,25 +40,15 @@ public class VocabExerciseService {
                 String.format("Questions not found for exerciseTypeId: %d and topicId: %d", typeId, topicId)
             );
         }
-
-        // Remove sensitive data
-//        response.getQuestions().forEach(q -> {
-//            q.setCorrectAnswer(null);
-//            q.setCorrectIndex(null);
-//        });
-
         return response;
     }
 
-    // 3. Submit answer
+    // 3. khi người dùng nộp bài thì xử lí ở đây
     @Transactional
     public SubmitAnswerResponse submitAnswer(Integer questionId, SubmitAnswerRequest request) {
         QuestionDTO question = repository.getQuestionById(questionId)
                 .orElseThrow(() -> new ResourceNotFoundException("Question", "id", questionId));
-
-        // ✅ NEW: Check if question is already completed by user
         boolean alreadyCompleted = repository.isQuestionCompletedByUser(request.getUserId(), questionId);
-
         boolean isCorrect = false;
         String correctAnswerDisplay = "";
         String exerciseTypeLower = request.getExerciseType().toLowerCase().trim();
@@ -127,13 +118,11 @@ public class VocabExerciseService {
         }
 
         if (isCorrect) {
-            // ✅ NEW: Only add XP if question is NOT already completed
             if (!alreadyCompleted) {
                 xpEarned = question.getXpReward() != null ? question.getXpReward() : 0;
                 repository.updateUserXP(request.getUserId(), xpEarned);
                 totalXp += xpEarned;
 
-                System.out.println("DEBUG: Question " + questionId + " is NEW. XP earned: " + xpEarned);
 
                 // Get topicId from request
                 Integer topicId = request.getTopicId();
@@ -141,12 +130,20 @@ public class VocabExerciseService {
                     topicId = repository.getTopicIdByQuestionId(questionId);
                 }
 
-                // ✅ Chỉ cập nhật progress khi câu CHƯA hoàn thành
                 repository.updateUserProgress(
                         request.getUserId(),
                         questionId,
                         topicId
                 );
+
+                // Kiểm tra và cập nhật huy hiệu sau khi hoàn thành bài tập từ vựng
+                try {
+                    badgeCheckService.checkAndUpdateBadges(request.getUserId().longValue(), "vocabulary");
+                    System.out.println("Badge check completed for user " + request.getUserId() + " after completing vocab exercise");
+                } catch (Exception e) {
+                    System.err.println("Error checking badges for user " + request.getUserId() + ": " + e.getMessage());
+                    // Không throw exception để không ảnh hưởng đến flow chính
+                }
             } else {
                 System.out.println("DEBUG: Question " + questionId + " already completed. NO XP earned and NO progress update.");
             }
@@ -169,7 +166,7 @@ public class VocabExerciseService {
                 totalXp,
                 explanation,
                 progress,
-                alreadyCompleted  // ✅ NEW: Truyền trạng thái câu đã hoàn thành
+                alreadyCompleted
         );
     }
     // 5. Get topic progress

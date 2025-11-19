@@ -6,6 +6,7 @@ import com.back_end.english_app.entity.UserEntity;
 import com.back_end.english_app.repository.UserRepository;
 import com.back_end.english_app.security.jwt.JwtUtil;
 import com.back_end.english_app.service.RefreshTokenService;
+import com.back_end.english_app.service.UserStreakService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -30,6 +31,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private final JwtUtil jwtUtil;
     private final UserRepository userRepository;
+    private final UserStreakService userStreakService;
     private final RefreshTokenService refreshTokenService;
 
     @Override
@@ -119,6 +121,15 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         // Ensure avatar persisted (re-fetch and log)
         Optional<UserEntity> check = userRepository.findById(user.getId());
+        // Cập nhật streak cho user khi đăng nhập thành công qua OAuth2
+        try {
+            userStreakService.updateStreak(user);
+            log.info("Updated streak for user id={} after OAuth2 login", user.getId());
+        } catch (Exception e) {
+            log.error("Failed to update streak for user id={}. Exception: {}", user.getId(), e.toString());
+            // Không throw exception để không block OAuth2 flow
+        }
+
         check.ifPresent(u -> log.info("DB check: user id={} avatar={}", u.getId(), u.getAvatar()));
 
         // Tạo access token (kèm avatar nếu có)

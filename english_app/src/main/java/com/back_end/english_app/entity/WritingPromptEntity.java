@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "writing_",
+@Table(name = "writing_prompts",
         indexes = {
                 @Index(name = "idx_user_mode", columnList = "user_id, mode"),
                 @Index(name = "idx_completed", columnList = "is_completed")
@@ -23,22 +23,15 @@ public class WritingPromptEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    // User quan hệ Many-to-One
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
-
     @ManyToOne
-    @JoinColumn(name = "form_id")
-    private WritingCategoryEntity writingForm;
-
+    @JoinColumn(name = "task_id", nullable = false)
+    private WrittingTaskEntity writingTask;
     @Enumerated(EnumType.STRING)
     @Column(columnDefinition = "ENUM('PROMPT', 'FREE') default 'PROMPT'")
     private Mode mode;
-
-    @Column(length = 255)
-    private String title;
-
     @Column(columnDefinition = "TEXT", nullable = false)
     private String userContent;
 
@@ -82,6 +75,7 @@ public class WritingPromptEntity {
         if (this.isCompleted == null) this.isCompleted = false;
         if (this.mode == null) this.mode = Mode.PROMPT;
     }
+
     public enum Mode {
         PROMPT, FREE
     }

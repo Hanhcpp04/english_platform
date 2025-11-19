@@ -1,6 +1,5 @@
 package com.back_end.english_app.dto.respones.auth;
 
-import com.back_end.english_app.entity.Role;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 
@@ -25,5 +24,6 @@ public class UserResponse {
     Boolean isActive;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
-
+    LevelResponse currentLevel;
+    UserStreakResponse streak;
 }

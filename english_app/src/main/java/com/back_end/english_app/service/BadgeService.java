@@ -108,7 +108,7 @@ public class BadgeService {
                 .id(badge.getId())
                 .name(badge.getName())
                 .description(badge.getDescription())
-                .iconUrl(badge.getIconUrl())
+                .iconUrl("")
                 .conditionType(badge.getConditionType())
                 .conditionValue(badge.getConditionValue())
                 .xpReward(badge.getXpReward())

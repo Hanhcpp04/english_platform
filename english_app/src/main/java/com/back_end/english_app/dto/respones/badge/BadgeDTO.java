@@ -19,6 +19,6 @@ public class BadgeDTO {
      ConditionType conditionType;
      Integer conditionValue;
      Integer xpReward;
-     LocalDateTime earnedAt; // Null nếu chưa đạt được
+     LocalDateTime earnedAt;
      Boolean isEarned;
 }
