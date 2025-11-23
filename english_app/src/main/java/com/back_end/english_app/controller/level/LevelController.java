@@ -25,7 +25,4 @@ public class LevelController {
                 .result(lst)
                 .build();
     }
-
-
-
 }

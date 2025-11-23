@@ -76,7 +76,17 @@ public class EndpointConfig {
 
     public static final List<SecuredEndpoint> ADMIN_ENDPOINTS = List.of(
     // cái nào của admin thì cho vào đây
-
+            new SecuredEndpoint("/users/**", HttpMethod.GET),
+            new SecuredEndpoint("/users/**", HttpMethod.PUT),
+            new SecuredEndpoint("/levels/**", HttpMethod.GET),
+            new SecuredEndpoint("/levels/**", HttpMethod.PUT),
+            new SecuredEndpoint("/levels/**", HttpMethod.POST),
+            new SecuredEndpoint("/badges/**", HttpMethod.GET),
+            new SecuredEndpoint("/badges/**", HttpMethod.PUT),
+            new SecuredEndpoint("/badges/**", HttpMethod.POST),
+            new SecuredEndpoint("/admin-vocab/topics/**", HttpMethod.GET),
+            new SecuredEndpoint("/admin-vocab/topics/**", HttpMethod.POST),
+            new SecuredEndpoint("/admin-vocab/topics/**", HttpMethod.PUT)
 
     );
     public static final List<SecuredEndpoint> AUTHENTICATED_ENDPOINTS=List.of(
@@ -85,6 +95,7 @@ public class EndpointConfig {
             new SecuredEndpoint("/auth/me", HttpMethod.GET),
             new SecuredEndpoint("/auth/logout", HttpMethod.POST)
 
+            //admin để tạm đây nha
 
     );
 }

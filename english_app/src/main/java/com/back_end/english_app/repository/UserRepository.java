@@ -4,6 +4,7 @@ import com.back_end.english_app.entity.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -14,4 +15,5 @@ public interface UserRepository extends JpaRepository<UserEntity , Long> {
     // Tìm user theo email mà không cần check isActive (dùng để xử lý trường hợp duplicate hoặc inactive)
     Optional<UserEntity> findByEmail(String email);
 
+    List<UserEntity> findByIsActiveTrue();
 }
