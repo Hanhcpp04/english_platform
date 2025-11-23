@@ -42,7 +42,7 @@ public class VocabTopicEntity {
     @Column(name = "total_words", columnDefinition = "INT DEFAULT 0")
     Integer totalWords = 0;
 
-    @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT TRUE")
+    @Column(name = "is_active")
     Boolean isActive = true;
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

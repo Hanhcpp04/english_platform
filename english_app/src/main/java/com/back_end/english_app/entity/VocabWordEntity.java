@@ -53,7 +53,7 @@ public class VocabWordEntity {
     @Column(name = "xp_reward", columnDefinition = "INT DEFAULT 5")
     Integer xpReward = 5;
 
-    @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT TRUE")
+    @Column(name = "is_active")
     Boolean isActive = true;
 
     @CreationTimestamp

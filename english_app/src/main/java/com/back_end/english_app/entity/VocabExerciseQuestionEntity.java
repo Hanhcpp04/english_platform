@@ -7,11 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "vocab_exercise_questions")
@@ -29,12 +26,15 @@ public class VocabExerciseQuestionEntity {
     @JoinColumn(name = "type_id", nullable = false)
     VocabExerciseTypeEntity type;
 
+    @ManyToOne
+    @JoinColumn(name = "topic_id")
+    VocabTopicEntity topic;
+
     @Column(nullable = false, columnDefinition = "TEXT")
     String question;
 
-    @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "JSON")
-    List<String> options;
+    String options;
 
     @Column(name = "correct_answer", nullable = false, columnDefinition = "TEXT")
     String correctAnswer;
@@ -45,7 +45,7 @@ public class VocabExerciseQuestionEntity {
     @Column(name = "xp_reward", columnDefinition = "INT DEFAULT 5")
     Integer xpReward = 5;
 
-    @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT TRUE")
+    @Column(name = "is_active")
     Boolean isActive = true;
 
     @CreationTimestamp

@@ -42,7 +42,7 @@ public class BadgeEntity {
     @Column(name = "xp_reward", columnDefinition = "INT DEFAULT 0")
     Integer xpReward = 0;
 
-    @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT TRUE")
+    @Column(name = "is_active")
     Boolean isActive = true;
 
     @CreationTimestamp

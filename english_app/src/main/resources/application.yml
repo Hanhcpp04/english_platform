@@ -3,6 +3,20 @@ server:
   servlet:
     context-path: /api/v1
 spring:
+  jackson:
+    time-zone: Asia/Ho_Chi_Minh
+
+  mvc:
+    time-zone: Asia/Ho_Chi_Minh
+
+  logging:
+    pattern:
+      dateformat: "yyyy-MM-dd HH:mm:ss"
+      console: "%d{yyyy-MM-dd HH:mm:ss.SSS, Asia/Ho_Chi_Minh} [%level] [%logger{36}] - %msg%n"
+    level:
+      org.hibernate.SQL: DEBUG
+      org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
   datasource:
     url: jdbc:mysql://localhost:3306/english_platform?useSSL=false&serverTimezone=UTC
     username: root
