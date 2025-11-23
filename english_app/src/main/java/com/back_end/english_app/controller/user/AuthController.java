@@ -19,6 +19,7 @@ import com.back_end.english_app.security.jwt.JwtUtil;
 import com.back_end.english_app.service.RefreshTokenService;
 import com.back_end.english_app.service.UserStreakService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -29,6 +30,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/auth")
+@Slf4j
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthenticationManager authenticationManager;
@@ -41,12 +43,20 @@ public class AuthController {
 
     @PostMapping("/register")
     public APIResponse<?> register(@RequestBody RegisterRequestDTO request) {
+        log.info("Register request: email={}, username={}, fullname={}",
+                request.getEmail(), request.getUsername(), request.getFullname());
         // Kiểm tra email đã tồn tại
         Optional<UserEntity> existingUser = userRepository.findByEmailAndIsActiveTrue(request.getEmail());
         if (existingUser.isPresent()) {
+            log.warn("Register failed: Email {} đã tồn tại", request.getEmail());
             return APIResponse.error("Email này đã tồn tại trong cơ sở dữ liệu");
         }
-        // Tạo user mới
+
+        // Kiểm tra username đã tồn tại
+        if (userRepository.existsByUsername(request.getUsername())) {
+            log.warn("Register failed: Username {} đã tồn tại", request.getUsername());
+            return APIResponse.error("User name đã tồn tại hãy chọn một User name mới!");
+        }
         UserEntity userNew = new UserEntity();
         userNew.setEmail(request.getEmail());
         userNew.setPasswordHash(passwordEncoder.encode(request.getPassword()));
@@ -63,8 +73,14 @@ public class AuthController {
 
     @PostMapping("/login")
     public APIResponse<AuthResponse> login(@RequestBody AuthRequest request){
-        UserEntity user = userRepository.findByEmailAndIsActiveTrue(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("Người dùng không tồn tại hoặc chưa kích hoạt"));
+        log.info("Login request: email={}",
+                request.getEmail());
+        Optional<UserEntity> optionalUser = userRepository.findByEmailAndIsActiveTrue(request.getEmail());
+        if (optionalUser.isEmpty()) {
+            return APIResponse.notFound("Người dùng không tồn tại hoặc chưa kích hoạt");
+        }
+        UserEntity user = optionalUser.get();
+
 
         // Authenticate trước
         Authentication authentication = authenticationManager.authenticate(

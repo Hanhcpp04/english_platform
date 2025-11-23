@@ -54,8 +54,12 @@ public class UserEntity {
     @Column(name = "total_xp", columnDefinition = "INT DEFAULT 0")
     Integer totalXp = 0;
 
-    @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT TRUE")
+    @Column(name = "is_active")
     Boolean isActive = true;
+
+    public Boolean isActive() {
+        return isActive;
+    }
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

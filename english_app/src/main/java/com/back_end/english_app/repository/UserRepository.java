@@ -13,5 +13,7 @@ public interface UserRepository extends JpaRepository<UserEntity , Long> {
 
     // Tìm user theo email mà không cần check isActive (dùng để xử lý trường hợp duplicate hoặc inactive)
     Optional<UserEntity> findByEmail(String email);
+    boolean existsByUsername(String username);
 
 }
+
