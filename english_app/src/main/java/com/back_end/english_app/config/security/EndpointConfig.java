@@ -43,6 +43,9 @@ public class EndpointConfig {
             new SecuredEndpoint("/vocab/exercise/topics/*/progress", HttpMethod.GET),
             new SecuredEndpoint("/vocab/exercise/exercise-types/*/submit-batch", HttpMethod.POST),
             new SecuredEndpoint("/vocab/exercise/exercise-types/*/progress", HttpMethod.DELETE),
+            new SecuredEndpoint("/vocab/exercise/history", HttpMethod.GET),
+            new SecuredEndpoint("/vocab/exercise/reset", HttpMethod.DELETE),
+            new SecuredEndpoint("/vocab/exercise/accuracy", HttpMethod.GET),
 
             // VocabStatsController
             new SecuredEndpoint("/vocab/stats/*", HttpMethod.GET),

@@ -54,17 +54,12 @@ public class UserEntity {
     @Column(name = "total_xp", columnDefinition = "INT DEFAULT 0")
     Integer totalXp = 0;
 
-    @Column(name = "is_active", columnDefinition = "BOOLEAN DEFAULT TRUE")
+    @Column(name = "is_active")
     Boolean isActive = true;
 
-    @Column(name = "is_email_verified", columnDefinition = "BOOLEAN DEFAULT FALSE")
-    Boolean isEmailVerified = false;
-
-    @Column(name = "email_verification_token")
-    String emailVerificationToken;
-
-    @Column(name = "email_verification_token_expires_at")
-    LocalDateTime emailVerificationTokenExpiresAt;
+    public Boolean isActive() {
+        return isActive;
+    }
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

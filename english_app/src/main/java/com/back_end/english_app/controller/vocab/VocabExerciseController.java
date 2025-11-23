@@ -37,7 +37,7 @@ public class VocabExerciseController {
         QuestionsResponse questions = service.getQuestionsByType(typeId,topicId, userId);
         return APIResponse.success(questions);
     }
-    // submit
+    // gửi đáp án
         @PostMapping("/questions/{questionId}/submit")
         public APIResponse<SubmitAnswerResponse> submitAnswer(
                 @PathVariable Integer questionId,
@@ -52,34 +52,52 @@ public class VocabExerciseController {
 
 
 
-    /**
-     * 4. GET: Progress overview
-     * GET /api/vocabulary/topics/{topicId}/progress?userId=1
-     */
-    @GetMapping("/topics/{topicId}/progress")
-    public APIResponse<TopicProgressResponse> getTopicProgress(
-            @PathVariable Integer topicId,
-            @RequestParam Integer userId) {
 
-        TopicProgressResponse progress = service.getTopicProgress(topicId, userId);
-        return APIResponse.success(progress);
+
+    /**
+     * 7. GET: Lấy lịch sử câu trả lời
+     * GET /vocab/exercise/history?userId=1&topicId=1&typeId=1
+     */
+    @GetMapping("/history")
+    public APIResponse<VocabAnswerHistoryResponseDTO> getAnswerHistory(
+            @RequestParam Integer userId,
+            @RequestParam Integer topicId,
+            @RequestParam Integer typeId) {
+
+        VocabAnswerHistoryResponseDTO history = service.getAnswerHistory(userId, topicId, typeId);
+        return APIResponse.success(history);
     }
 
     /**
-     * 6. DELETE: Reset progress for exercise type
-     * DELETE /api/vocabulary/exercise-types/{typeId}/progress?userId=1
+     * 8. DELETE: Reset bài tập - xóa lịch sử câu trả lời và progress
+     * DELETE /vocab/exercise/reset?userId=1&topicId=1&typeId=1
      */
-    @DeleteMapping("/exercise-types/{typeId}/progress")
-    public APIResponse<Map<String, Object>> resetProgress(
-            @PathVariable Integer typeId,
-            @RequestParam Integer userId) {
+    @DeleteMapping("/reset")
+    public APIResponse<Map<String, Object>> resetExerciseAnswers(
+            @RequestParam Integer userId,
+            @RequestParam Integer topicId,
+            @RequestParam Integer typeId) {
 
-        service.resetProgress(typeId, userId);
+        service.resetExerciseAnswers(userId, topicId, typeId);
 
         Map<String, Object> result = new HashMap<>();
         result.put("success", true);
-        result.put("message", "Progress reset successfully");
+        result.put("message", "Exercise answers and progress reset successfully");
 
         return APIResponse.success(result);
+    }
+
+    /**
+     * 9. GET: Thống kê độ chính xác
+     * GET /vocab/exercise/accuracy?userId=1&topicId=1&typeId=1
+     */
+    @GetMapping("/accuracy")
+    public APIResponse<VocabAccuracyStatsDTO> getExerciseAccuracyStats(
+            @RequestParam Integer userId,
+            @RequestParam Integer topicId,
+            @RequestParam Integer typeId) {
+
+        VocabAccuracyStatsDTO stats = service.getExerciseAccuracyStats(userId, topicId, typeId);
+        return APIResponse.success(stats);
     }
 }
