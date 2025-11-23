@@ -2,10 +2,8 @@ package com.back_end.english_app.service;
 
 import com.back_end.english_app.config.APIResponse;
 import com.back_end.english_app.dto.request.vocab.AdminVocabTopicRequest;
-import com.back_end.english_app.dto.request.vocab.AdminVocabTopicUpdateRequest;
 import com.back_end.english_app.dto.respones.vocab.AdminVocabTopicResponse;
 import com.back_end.english_app.entity.VocabTopicEntity;
-import com.back_end.english_app.entity.VocabWordEntity;
 import com.back_end.english_app.repository.VocabTopicRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -19,8 +17,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -28,7 +24,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AdminVocabTopicService {
     private final VocabTopicRepository vocabTopicRepository;
-
 
     // get all vocab topic
     public APIResponse<Page<AdminVocabTopicResponse>> getAllTopics(int page, int size) {
@@ -58,6 +53,11 @@ public class AdminVocabTopicService {
 
     //thêm vocab topic mới
     public APIResponse<?> addNewVocabTopic(AdminVocabTopicRequest request, MultipartFile iconUrl){
+        Optional<VocabTopicEntity> existTopic = vocabTopicRepository.findByEnglishName(request.getEnglishName());
+        if(existTopic.isPresent()){
+            return APIResponse.error("Tên topic đã tồn tại");
+        }
+
         // lỗi file null
         if (iconUrl == null || iconUrl.isEmpty()) {
             return APIResponse.error("File icon không được để trống");
@@ -106,20 +106,29 @@ public class AdminVocabTopicService {
         }
     }
 
-    public APIResponse<?> updateVocabTopic(Long id, AdminVocabTopicUpdateRequest request, MultipartFile iconFile){
+    public APIResponse<?> updateVocabTopic(Long id, AdminVocabTopicRequest request, MultipartFile iconFile){
         Optional<VocabTopicEntity> optVocabTopic = vocabTopicRepository.findById(id);
         if(optVocabTopic.isEmpty()){
             return APIResponse.error("Vocab topic không tồn tại");
         }
 
         VocabTopicEntity topic = optVocabTopic.get();
+        // Kiểm tra trùng tên nếu user truyền name mới
+        if (request.getName() != null) {
+            Optional<VocabTopicEntity> topicByName = vocabTopicRepository.findByEnglishName(request.getEnglishName());
+
+            // Nếu tìm thấy badge khác có tên trùng
+            if (topicByName.isPresent() && !topicByName.get().getId().equals(topic.getId())) {
+                return APIResponse.error("Tên topic đã tồn tại, vui lòng nhập tên khác");
+            }
+            topic.setEnglishName(request.getEnglishName());
+        }
 
         try{
             if (request.getEnglishName() != null) topic.setEnglishName(request.getEnglishName());
             if (request.getName() != null) topic.setName(request.getName());
             if (request.getDescription() != null) topic.setDescription(request.getDescription());
             if (request.getXpReward() != null) topic.setXpReward(request.getXpReward());
-            if (request.getIsActive() != null) topic.setIsActive(request.getIsActive());
 
             // Xử lý file icon mới nếu có
             if (iconFile != null && !iconFile.isEmpty()) {
@@ -154,6 +163,38 @@ public class AdminVocabTopicService {
             return APIResponse.error("Lỗi xử lý file: " + e.getMessage());
         } catch (Exception e) {
             return APIResponse.error("Lỗi lưu dữ liệu: " + e.getMessage());
+        }
+    }
+
+    //xóa hoặc khôi phục vocab topic
+    public APIResponse<String> deleteOrRestoreVocabTopic(Long id, String status) {
+        // Tìm topic theo id
+        Optional<VocabTopicEntity> optTopic = vocabTopicRepository.findById(id);
+        if (optTopic.isEmpty()) {
+            return APIResponse.error("Topic không tồn tại");
+        }
+        VocabTopicEntity topic = optTopic.get();
+        status = status.trim().toLowerCase();
+
+        switch (status) {
+            case "delete":
+                if (!topic.getIsActive()) {
+                    return APIResponse.error("Topic đã bị vô hiệu hóa trước đó");
+                }
+                topic.setIsActive(false);
+                vocabTopicRepository.save(topic);
+                return APIResponse.success("Vô hiệu hóa Topic thành công");
+
+            case "restore":
+                if (topic.getIsActive()) {
+                    return APIResponse.error("Topic đang hoạt động, không cần khôi phục");
+                }
+                topic.setIsActive(true);
+                vocabTopicRepository.save(topic);
+                return APIResponse.success("Khôi phục Topic thành công");
+
+            default:
+                return APIResponse.error("Trạng thái không hợp lệ!");
         }
     }
 }

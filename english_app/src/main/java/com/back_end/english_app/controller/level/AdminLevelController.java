@@ -12,22 +12,22 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/levels")
+@RequestMapping("/admin-levels")
 @RequiredArgsConstructor
 public class AdminLevelController {
     public final AdminLevelService adminLevelService;
 
-    @GetMapping()
+    @GetMapping("/getAll")
     public APIResponse<List<LevelEntity>> getAllLevels(){
         return adminLevelService.getAllLevels();
     }
 
-    @PostMapping()
+    @PostMapping("/create")
     public APIResponse<?> addNewLevel(@RequestBody LevelRequest request){
         return adminLevelService.addNewLevel(request);
     }
 
-    @PutMapping("/{levelNumber}")
+    @PutMapping("/update/{levelNumber}")
     public APIResponse<?> updateLevel(@PathVariable Integer levelNumber, @RequestBody LevelUpdateRequest request){
         return adminLevelService.updateLevel(levelNumber, request);
     }

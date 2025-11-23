@@ -24,6 +24,10 @@ public class AdminLevelService {
 
     //thêm level mới
     public APIResponse<?> addNewLevel(LevelRequest request){
+        Optional<LevelEntity> optLevel = levelRepository.findByLevelNameIgnoreCase(request.getLevelName());
+        if(optLevel.isPresent()){
+            return APIResponse.error("Tên level đã tồn tại, vui lòng nhập tên khác");
+        }
         LevelEntity level = new LevelEntity();
 
         Optional<LevelEntity> optHighestLevel = levelRepository.findTopByOrderByLevelNumberDesc();
@@ -60,21 +64,32 @@ public class AdminLevelService {
 
     //update tên và mô tả của level
     public APIResponse<?> updateLevel(Integer id, LevelUpdateRequest request) {
-        Optional<LevelEntity> level = levelRepository.findByLevelNumber(id);
-        if (level.isEmpty()) {
+
+        Optional<LevelEntity> levelOpt = levelRepository.findByLevelNumber(id);
+        if (levelOpt.isEmpty()) {
             return APIResponse.error("Level không tồn tại");
         }
 
-        LevelEntity lv = level.get();
+        LevelEntity level = levelOpt.get();
 
-        if (request.getLevelName() != null)
-            lv.setLevelName(request.getLevelName());
+        // Nếu user truyền levelName thì kiểm tra có trùng với level khác không
+        if (request.getLevelName() != null) {
+            Optional<LevelEntity> levelByName =
+                    levelRepository.findByLevelNameIgnoreCase(request.getLevelName());
 
-        if (request.getDescription() != null)
-            lv.setDescription(request.getDescription());
+            // Nếu tìm thấy level khác có tên trùng
+            if (levelByName.isPresent() && !levelByName.get().getLevelNumber().equals(level.getLevelNumber())) {
+                return APIResponse.error("Tên level đã tồn tại, vui lòng nhập tên khác");
+            }
 
-        levelRepository.save(lv);
+            level.setLevelName(request.getLevelName());
+        }
 
+        if (request.getDescription() != null) {
+            level.setDescription(request.getDescription());
+        }
+
+        levelRepository.save(level);
         return APIResponse.success("Cập nhật level thành công");
     }
 }

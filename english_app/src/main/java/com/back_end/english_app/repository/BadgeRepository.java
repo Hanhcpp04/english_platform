@@ -15,4 +15,6 @@ public interface BadgeRepository extends JpaRepository<BadgeEntity ,Long> {
     List<BadgeEntity> findByConditionTypeAndIsActiveTrue(ConditionType conditionType);
     List<BadgeEntity> findByIsActiveTrueOrderByConditionTypeAscConditionValueAsc();
     List<BadgeEntity> findByConditionTypeAndIsActiveTrueOrderByConditionValueAsc(ConditionType conditionType);
+
+    Optional<BadgeEntity> findByName(String name);
 }

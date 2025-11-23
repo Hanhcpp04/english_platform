@@ -19,4 +19,5 @@ public interface LevelRepository extends JpaRepository<LevelEntity , Integer> {
     //lấy ra level cao nhất
     Optional<LevelEntity> findTopByOrderByLevelNumberDesc();
 
+    Optional<LevelEntity> findByLevelNameIgnoreCase(String name);
 }
