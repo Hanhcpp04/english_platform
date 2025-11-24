@@ -209,7 +209,6 @@ public class AdminVocabWordService {
         }
 
         VocabWordEntity word = wordOpt.get();
-        VocabTopicEntity topic = word.getTopic();
 
         status = status.trim().toLowerCase();
 
@@ -221,10 +220,6 @@ public class AdminVocabWordService {
                 word.setIsActive(false);
                 vocabWordRepository.save(word);
 
-                // Giảm totalWords của topic
-                topic.setTotalWords(Math.max(topic.getTotalWords() - 1, 0));
-                vocabTopicRepository.save(topic);
-
                 return APIResponse.success("Vô hiệu hóa từ vựng thành công");
 
             case "restore":
@@ -233,10 +228,6 @@ public class AdminVocabWordService {
                 }
                 word.setIsActive(true);
                 vocabWordRepository.save(word);
-
-                // Tăng totalWords của topic
-                topic.setTotalWords(topic.getTotalWords() + 1);
-                vocabTopicRepository.save(topic);
 
                 return APIResponse.success("Khôi phục từ vựng thành công");
 
