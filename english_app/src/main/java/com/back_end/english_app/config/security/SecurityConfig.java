@@ -45,7 +45,7 @@ public class SecurityConfig {
                     // OAuth2 endpoints - MỚI: cho phép truy cập OAuth2
                     auth.requestMatchers("/oauth2/**").permitAll()
                         .requestMatchers("/login/oauth2/**").permitAll()
-                            .requestMatchers("/images/**").permitAll();
+                            .requestMatchers("/uploads/**").permitAll();
 
                     // Public endpoints
                     EndpointConfig.PUBLIC_ENDPOINTS.forEach(endpoint ->
