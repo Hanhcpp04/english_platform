@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -28,6 +29,11 @@ public class ForumPostEntity {
 
     @Column(columnDefinition = "TEXT", nullable = false)
     private String content;
+
+    @ElementCollection
+    @CollectionTable(name = "forum_post_tags", joinColumns = @JoinColumn(name = "post_id"))
+    @Column(name = "tag")
+    private List<String> tags = new ArrayList<>();
 
     @Column(name = "likes_count")
     private Integer likesCount = 0;

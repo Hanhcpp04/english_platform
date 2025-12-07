@@ -11,6 +11,7 @@ public class EndpointConfig {
             new SecuredEndpoint("/auth/register", HttpMethod.POST),
             new SecuredEndpoint("/auth/login", HttpMethod.POST),
             new SecuredEndpoint("/auth/refresh", HttpMethod.POST),
+            new SecuredEndpoint("/71dad410-ef40-4ae6-920b-4a0b82f6d864_quality_icons.webp",HttpMethod.GET),
 
             // Badge public endpoints - xem badges của users khác
             new SecuredEndpoint("/badge/summary/*", HttpMethod.GET),
@@ -69,10 +70,22 @@ public class EndpointConfig {
             // writting
             new SecuredEndpoint("/writing/topics", HttpMethod.GET),
             new SecuredEndpoint("/writing/topics/*/tasks", HttpMethod.GET),
-            new SecuredEndpoint("/writing/tasks/*/prompts", HttpMethod.GET)
-
-
-
+            new SecuredEndpoint("/writing/tasks/*/prompts", HttpMethod.GET),
+            //forum
+            new SecuredEndpoint("/forum/posts",HttpMethod.GET),
+            new SecuredEndpoint("/forum/posts/recent",HttpMethod.GET),
+            new SecuredEndpoint("/forum/post/detail/*",HttpMethod.GET),
+            new SecuredEndpoint("/forum/post/create/*",HttpMethod.POST),
+            new SecuredEndpoint("/forum/post/update/*",HttpMethod.PUT),
+            new SecuredEndpoint("/forum/post/delete/*",HttpMethod.DELETE),
+            // Forum comment endpoints
+            new SecuredEndpoint("/forum/posts/*/comments", HttpMethod.GET),
+            new SecuredEndpoint("/forum/posts/*/comments", HttpMethod.POST),
+            new SecuredEndpoint("/forum/comments/*", HttpMethod.PUT),
+            new SecuredEndpoint("/forum/comments/*", HttpMethod.DELETE),
+            // Forum like endpoints
+            new SecuredEndpoint("/forum/posts/*/like", HttpMethod.POST),
+            new SecuredEndpoint("/forum/comments/*/like", HttpMethod.POST)
 
 
     );
