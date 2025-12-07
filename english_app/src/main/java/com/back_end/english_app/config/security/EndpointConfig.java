@@ -92,15 +92,38 @@ public class EndpointConfig {
 
     public static final List<SecuredEndpoint> ADMIN_ENDPOINTS = List.of(
     // cái nào của admin thì cho vào đây
+            //user
+            new SecuredEndpoint("/admin-users/getAll", HttpMethod.GET),
+            new SecuredEndpoint("/admin-users/update-role/{id}/{role}", HttpMethod.PUT),
+            new SecuredEndpoint("/admin-users/delete-restore/{id}/{status}", HttpMethod.PUT), //status: delete hoặc restore
 
+            //level
+            new SecuredEndpoint("/admin-levels/getAll", HttpMethod.GET), //level ko phân trang đâu nha
+            new SecuredEndpoint("/admin-levels/create", HttpMethod.POST),
+            new SecuredEndpoint("/admin-levels/update/{levelNumber}", HttpMethod.PUT),
 
-    );
+            //badge
+            new SecuredEndpoint("/admin-badges/getAll", HttpMethod.GET),
+            new SecuredEndpoint("/admin-badges/create", HttpMethod.POST),
+            new SecuredEndpoint("/admin-badges/update/{id}", HttpMethod.PUT),
+            new SecuredEndpoint("/admin-badges/delete-restore/{id}/{status}", HttpMethod.PUT), //status: delete hoặc restore
+
+            //vocab topic
+            new SecuredEndpoint("/admin-vocab/topics/getAll", HttpMethod.GET),
+            new SecuredEndpoint("/admin-vocab/topics/create", HttpMethod.POST),
+            new SecuredEndpoint("/admin-vocab/topics/update/{id}", HttpMethod.PUT),
+            new SecuredEndpoint("/admin-vocab/topics/delete-restore/{id}/{status}", HttpMethod.PUT), //status: delete hoặc restore
+
+            //vocab word
+            new SecuredEndpoint("/admin-vocab/words/getAll", HttpMethod.GET),
+            new SecuredEndpoint("/admin-vocab/words/create", HttpMethod.POST),
+            new SecuredEndpoint("/admin-vocab/words/update/{id}", HttpMethod.PUT),
+            new SecuredEndpoint("/admin-vocab/words/delete-restore/{id}/{status}", HttpMethod.PUT) //status: delete hoặc restore
+            );
     public static final List<SecuredEndpoint> AUTHENTICATED_ENDPOINTS=List.of(
 //  Nếu một API cần xác thực nhưng không cần phân quyền cụ thể, bạn đưa vào AUTHENTICATED_ENDPOINTS.
 //  Ví dụ: profile cá nhân, đổi mật khẩu, logout, xem thông tin riêng của mình.
             new SecuredEndpoint("/auth/me", HttpMethod.GET),
             new SecuredEndpoint("/auth/logout", HttpMethod.POST)
-
-
     );
 }
