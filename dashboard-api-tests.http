@@ -1,0 +1,49 @@
+### Dashboard API Tests
+
+# Base URL
+@baseUrl = http://localhost:8088/api/v1
+@accessToken = YOUR_ACCESS_TOKEN_HERE
+
+### 1. Get Dashboard Summary (Authenticated User)
+GET {{baseUrl}}/dashboard/summary
+Authorization: Bearer {{accessToken}}
+
+### 2. Get Dashboard Summary by User ID
+GET {{baseUrl}}/dashboard/summary/1
+Authorization: Bearer {{accessToken}}
+
+### 3. Get User Profile (to get user info)
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{accessToken}}
+
+### 4. Get Badge Summary
+GET {{baseUrl}}/badge/summary/1?limit=6
+Authorization: Bearer {{accessToken}}
+
+### 5. Get All Badges
+GET {{baseUrl}}/badge/all/1
+Authorization: Bearer {{accessToken}}
+
+### 6. Get Badge Progress
+GET {{baseUrl}}/badge/progress
+Authorization: Bearer {{accessToken}}
+
+### 7. Get Earned Badges
+GET {{baseUrl}}/badge/earned
+Authorization: Bearer {{accessToken}}
+
+### 8. Get Recent Badges
+GET {{baseUrl}}/badge/recent/1?limit=6
+Authorization: Bearer {{accessToken}}
+
+### 9. Get Vocabulary Stats
+GET {{baseUrl}}/vocab/stats/1
+Authorization: Bearer {{accessToken}}
+
+### 10. Get Grammar Stats
+GET {{baseUrl}}/grammar/stats/1
+Authorization: Bearer {{accessToken}}
+
+### 11. Force Check Badges (Test)
+POST {{baseUrl}}/badge/check
+Authorization: Bearer {{accessToken}}

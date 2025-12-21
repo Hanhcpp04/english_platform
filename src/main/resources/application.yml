@@ -1,0 +1,65 @@
+server:
+  port: 8088
+  servlet:
+    context-path: /api/v1
+    max-file-size: 20MB
+    max-request-size: 20MB
+spring:
+  file:
+    upload-dir: uploads
+  jackson:
+    time-zone: Asia/Ho_Chi_Minh
+
+  mvc:
+    time-zone: Asia/Ho_Chi_Minh
+  logging:
+    pattern:
+      dateformat: "yyyy-MM-dd HH:mm:ss"
+      console: "%d{yyyy-MM-dd HH:mm:ss.SSS, Asia/Ho_Chi_Minh} [%level] [%logger{36}] - %msg%n"
+    level:
+      org.hibernate.SQL: DEBUG
+      org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+
+  datasource:
+    url: jdbc:mysql://localhost:3306/english_platform?useSSL=false&serverTimezone=UTC
+    username: root
+    password: ""
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope:
+              - openid
+              - profile
+              - email
+            redirect-uri: "http://localhost:8088/api/v1/login/oauth2/code/{registrationId}"
+jwt:
+  secret: HaHoangAnh29092004_haui_cntt_very_secure_secret_key_2025
+  expiration: 7200000   # 2 hours in milliseconds
+  refresh-expiration: 604800000  # 7 days in milliseconds
+
+# Gemini AI Configuration
+gemini:
+  api-key: ${GEMINI_API_KEY:your-gemini-api-key-here}
+  api-url: https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent
+  max-tokens: 8192
+  temperature: 0.7
+
+springdoc:
+  api-docs:
+    path: /v3/api-docs
+  swagger-ui:
+    path: /swagger-ui.html
