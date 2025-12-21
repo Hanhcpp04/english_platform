@@ -74,17 +74,9 @@ public class AdminBadgeService {
             newBadge.setConditionValue(request.getConditionValue());
             newBadge.setXpReward(request.getXpReward() != null ? request.getXpReward() : 0);
 
-            // Tạo tên file
-            String fileName = UUID.randomUUID().toString() + "_" + iconUrl.getOriginalFilename();
-
-            Path uploadDir = Paths.get("uploads/badge");
-            if (!Files.exists(uploadDir)) {
-                Files.createDirectories(uploadDir);
-            }
-
-            Path filePath = uploadDir.resolve(fileName);
-            Files.copy(iconUrl.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-            newBadge.setIconUrl(fileName);
+            // Upload icon - sử dụng FileUploadService
+            String iconRelativePath = fileUploadService.uploadFile(iconUrl, "badge");
+            newBadge.setIconUrl(iconRelativePath.substring(iconRelativePath.lastIndexOf("/") + 1));
 
             badgeRepository.save(newBadge);
 
@@ -134,22 +126,11 @@ public class AdminBadgeService {
         if (request.getConditionValue() != null) badge.setConditionValue(request.getConditionValue());
         if (request.getXpReward() != null) badge.setXpReward(request.getXpReward());
 
-        // Xử lý file icon mới nếu có
+        // Xử lý file icon mới nếu có - sử dụng FileUploadService
         if (iconFile != null && !iconFile.isEmpty()) {
-            String fileName = UUID.randomUUID().toString() + "_" + iconFile.getOriginalFilename();
-            Path uploadDir = Paths.get("uploads/badge");
-            if (!Files.exists(uploadDir)) {
-                try {
-                    Files.createDirectories(uploadDir);
-                } catch (IOException e) {
-                    return APIResponse.error("Lỗi tạo thư mục: " + e.getMessage());
-                }
-            }
-
-            Path filePath = uploadDir.resolve(fileName);
             try {
-                Files.copy(iconFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-                badge.setIconUrl(fileName);
+                String iconRelativePath = fileUploadService.uploadFile(iconFile, "badge");
+                badge.setIconUrl(iconRelativePath.substring(iconRelativePath.lastIndexOf("/") + 1));
             } catch (IOException e) {
                 return APIResponse.error("Lỗi xử lý file: " + e.getMessage());
             }

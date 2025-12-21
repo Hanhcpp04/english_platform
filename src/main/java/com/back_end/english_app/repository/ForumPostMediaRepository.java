@@ -12,5 +12,7 @@ public interface ForumPostMediaRepository extends JpaRepository<ForumPostMediaEn
     List<ForumPostMediaEntity> findByPostIdAndIsActiveTrue(Long postId);
 
     List<ForumPostMediaEntity> findByIdInAndIsActiveTrue(List<Long> ids);
+
+    Integer countByPostId(Long postId);
 }
 

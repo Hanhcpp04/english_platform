@@ -37,7 +37,7 @@ public class AdminVocabTopicService {
                     topic.getEnglishName(),
                     topic.getName(),
                     topic.getDescription(),
-                    fileUploadService.buildFullUrl("Topic/" + topic.getIcon_url()),
+                    topic.getIcon_url(), // Trả về icon name thay vì URL
                     topic.getXpReward(),
                     topic.getTotalWords(),
                     topic.getIsActive(),
@@ -53,15 +53,10 @@ public class AdminVocabTopicService {
     }
 
     //thêm vocab topic mới
-    public APIResponse<?> addNewVocabTopic(AdminVocabTopicRequest request, MultipartFile iconUrl){
+    public APIResponse<?> addNewVocabTopic(AdminVocabTopicRequest request){
         Optional<VocabTopicEntity> existTopic = vocabTopicRepository.findByEnglishName(request.getEnglishName());
         if(existTopic.isPresent()){
             return APIResponse.error("Tên topic đã tồn tại");
-        }
-
-        // lỗi file null
-        if (iconUrl == null || iconUrl.isEmpty()) {
-            return APIResponse.error("File icon không được để trống");
         }
 
         try{
@@ -71,18 +66,7 @@ public class AdminVocabTopicService {
             newTopic.setEnglishName(request.getEnglishName());
             newTopic.setDescription(request.getDescription());
             newTopic.setXpReward(request.getXpReward());
-
-            // Tạo tên file
-            String fileName = UUID.randomUUID().toString() + "_" + iconUrl.getOriginalFilename();
-
-            Path uploadDir = Paths.get("uploads/Topic");
-            if (!Files.exists(uploadDir)) {
-                Files.createDirectories(uploadDir);
-            }
-
-            Path filePath = uploadDir.resolve(fileName);
-            Files.copy(iconUrl.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-            newTopic.setIcon_url(fileName);
+            newTopic.setIcon_url(request.getIcon()); // Lưu icon name
 
             vocabTopicRepository.save(newTopic);
 
@@ -92,7 +76,7 @@ public class AdminVocabTopicService {
                             .englishName(newTopic.getEnglishName())
                             .name(newTopic.getName())
                             .description(newTopic.getDescription())
-                            .iconUrl(fileUploadService.buildFullUrl("Topic/" + newTopic.getIcon_url()))
+                            .iconUrl(newTopic.getIcon_url())
                             .xpReward(newTopic.getXpReward())
                             .totalWords(newTopic.getTotalWords())
                             .isActive(newTopic.getIsActive())
@@ -100,14 +84,12 @@ public class AdminVocabTopicService {
                             .updatedAt(newTopic.getUpdatedAt())
                             .build()
             );
-        }catch (IOException e) {
-            return APIResponse.error("Lỗi xử lý file: " + e.getMessage());
         } catch (Exception e) {
             return APIResponse.error("Lỗi khi lưu dữ liệu: " + e.getMessage());
         }
     }
 
-    public APIResponse<?> updateVocabTopic(Long id, AdminVocabTopicRequest request, MultipartFile iconFile){
+    public APIResponse<?> updateVocabTopic(Long id, AdminVocabTopicRequest request){
         Optional<VocabTopicEntity> optVocabTopic = vocabTopicRepository.findById(id);
         if(optVocabTopic.isEmpty()){
             return APIResponse.error("Vocab topic không tồn tại");
@@ -115,14 +97,11 @@ public class AdminVocabTopicService {
 
         VocabTopicEntity topic = optVocabTopic.get();
         // Kiểm tra trùng tên nếu user truyền name mới
-        if (request.getName() != null) {
+        if (request.getEnglishName() != null && !request.getEnglishName().equals(topic.getEnglishName())) {
             Optional<VocabTopicEntity> topicByName = vocabTopicRepository.findByEnglishName(request.getEnglishName());
-
-            // Nếu tìm thấy badge khác có tên trùng
-            if (topicByName.isPresent() && !topicByName.get().getId().equals(topic.getId())) {
+            if (topicByName.isPresent()) {
                 return APIResponse.error("Tên topic đã tồn tại, vui lòng nhập tên khác");
             }
-            topic.setEnglishName(request.getEnglishName());
         }
 
         try{
@@ -130,19 +109,7 @@ public class AdminVocabTopicService {
             if (request.getName() != null) topic.setName(request.getName());
             if (request.getDescription() != null) topic.setDescription(request.getDescription());
             if (request.getXpReward() != null) topic.setXpReward(request.getXpReward());
-
-            // Xử lý file icon mới nếu có
-            if (iconFile != null && !iconFile.isEmpty()) {
-                String fileName = UUID.randomUUID().toString() + "_" + iconFile.getOriginalFilename();
-                Path uploadDir = Paths.get("uploads/Topic");
-                if (!Files.exists(uploadDir)) {
-                    Files.createDirectories(uploadDir);
-                }
-
-                Path filePath = uploadDir.resolve(fileName);
-                Files.copy(iconFile.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
-                topic.setIcon_url(fileName);
-            }
+            if (request.getIcon() != null) topic.setIcon_url(request.getIcon());
 
             vocabTopicRepository.save(topic);
 
@@ -152,7 +119,7 @@ public class AdminVocabTopicService {
                             .englishName(topic.getEnglishName())
                             .name(topic.getName())
                             .description(topic.getDescription())
-                            .iconUrl(fileUploadService.buildFullUrl("Topic/" + topic.getIcon_url()))
+                            .iconUrl(topic.getIcon_url())
                             .xpReward(topic.getXpReward())
                             .totalWords(topic.getTotalWords())
                             .isActive(topic.getIsActive())
@@ -160,8 +127,6 @@ public class AdminVocabTopicService {
                             .updatedAt(topic.getUpdatedAt())
                             .build()
             );
-        }catch (IOException e) {
-            return APIResponse.error("Lỗi xử lý file: " + e.getMessage());
         } catch (Exception e) {
             return APIResponse.error("Lỗi lưu dữ liệu: " + e.getMessage());
         }

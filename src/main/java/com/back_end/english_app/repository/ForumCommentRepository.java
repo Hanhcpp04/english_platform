@@ -22,5 +22,16 @@ public interface ForumCommentRepository extends JpaRepository<ForumCommentEntity
     int countByPostIdAndIsActiveTrue(Long postId);
 
     int countByUserIdAndIsActiveTrue(Long userId);
+
+    // Admin methods
+    Page<ForumCommentEntity> findByIsActive(Boolean isActive, Pageable pageable);
+    
+    Page<ForumCommentEntity> findByPostId(Long postId, Pageable pageable);
+    
+    Page<ForumCommentEntity> findByPostIdAndIsActive(Long postId, Boolean isActive, Pageable pageable);
+    
+    Long countByIsActive(Boolean isActive);
+    
+    Long countByCreatedAtBetween(java.time.LocalDateTime start, java.time.LocalDateTime end);
 }
 

@@ -98,6 +98,7 @@ public class EndpointConfig {
             new SecuredEndpoint("/admin-users/getAll", HttpMethod.GET),
             new SecuredEndpoint("/admin-users/update-role/{id}/{role}", HttpMethod.PUT),
             new SecuredEndpoint("/admin-users/delete-restore/{id}/{status}", HttpMethod.PUT), //status: delete hoặc restore
+            new SecuredEndpoint("/admin-users/profile/{userId}", HttpMethod.GET),
 
             //level
             new SecuredEndpoint("/admin-levels/getAll", HttpMethod.GET), //level ko phân trang đâu nha
@@ -118,9 +119,54 @@ public class EndpointConfig {
 
             //vocab word
             new SecuredEndpoint("/admin-vocab/words/getAll", HttpMethod.GET),
+            new SecuredEndpoint("/admin-vocab/words/by-topic/*", HttpMethod.GET),
             new SecuredEndpoint("/admin-vocab/words/create", HttpMethod.POST),
             new SecuredEndpoint("/admin-vocab/words/update/{id}", HttpMethod.PUT),
-            new SecuredEndpoint("/admin-vocab/words/delete-restore/{id}/{status}", HttpMethod.PUT) //status: delete hoặc restore
+            new SecuredEndpoint("/admin-vocab/words/delete-restore/{id}/{status}", HttpMethod.PUT), //status: delete hoặc restore
+            
+            //vocab excel import/export
+            new SecuredEndpoint("/admin-vocab/excel/template", HttpMethod.GET),
+            new SecuredEndpoint("/admin-vocab/excel/import", HttpMethod.POST),
+
+            //grammar topic
+            new SecuredEndpoint("/admin-grammar/topics/getAll", HttpMethod.GET),
+            new SecuredEndpoint("/admin-grammar/topics/create", HttpMethod.POST),
+            new SecuredEndpoint("/admin-grammar/topics/update/{id}", HttpMethod.PUT),
+            new SecuredEndpoint("/admin-grammar/topics/delete-restore/{id}/{status}", HttpMethod.PUT), //status: delete hoặc restore
+
+            //grammar lesson
+            new SecuredEndpoint("/admin-grammar/lessons/getAll", HttpMethod.GET),
+            new SecuredEndpoint("/admin-grammar/lessons/by-topic/*", HttpMethod.GET),
+            new SecuredEndpoint("/admin-grammar/lessons/create", HttpMethod.POST),
+            new SecuredEndpoint("/admin-grammar/lessons/update/{id}", HttpMethod.PUT),
+            new SecuredEndpoint("/admin-grammar/lessons/delete-restore/{id}/{status}", HttpMethod.PUT), //status: delete hoặc restore
+
+            //writing topic
+            new SecuredEndpoint("/admin-writing/topics/getAll", HttpMethod.GET),
+            new SecuredEndpoint("/admin-writing/topics/create", HttpMethod.POST),
+            new SecuredEndpoint("/admin-writing/topics/update/{id}", HttpMethod.PUT),
+            new SecuredEndpoint("/admin-writing/topics/delete-restore/{id}/{status}", HttpMethod.PUT), //status: delete hoặc restore
+
+            //writing task
+            new SecuredEndpoint("/admin-writing/tasks/getAll", HttpMethod.GET),
+            new SecuredEndpoint("/admin-writing/tasks/by-topic/*", HttpMethod.GET),
+            new SecuredEndpoint("/admin-writing/tasks/create", HttpMethod.POST),
+            new SecuredEndpoint("/admin-writing/tasks/update/{id}", HttpMethod.PUT),
+            new SecuredEndpoint("/admin-writing/tasks/delete-restore/{id}/{status}", HttpMethod.PUT), //status: delete hoặc restore
+            new SecuredEndpoint("/admin-writing/tasks/*/grading-criteria", HttpMethod.PUT), //update grading criteria
+            
+            // Admin Forum
+            new SecuredEndpoint("/admin-forum/posts", HttpMethod.GET),
+            new SecuredEndpoint("/admin-forum/posts/*/*", HttpMethod.PUT), // delete or restore post
+            new SecuredEndpoint("/admin-forum/comments", HttpMethod.GET),
+            new SecuredEndpoint("/admin-forum/comments/*/*", HttpMethod.PUT), // delete or restore comment
+            new SecuredEndpoint("/admin-forum/statistics", HttpMethod.GET),
+            
+            // Admin Dashboard
+            new SecuredEndpoint("/admin/dashboard", HttpMethod.GET),
+            // Report export endpoints
+            new SecuredEndpoint("/admin/reports/export", HttpMethod.GET),
+            new SecuredEndpoint("/admin/reports/types", HttpMethod.GET)
             );
     public static final List<SecuredEndpoint> AUTHENTICATED_ENDPOINTS=List.of(
 //  Nếu một API cần xác thực nhưng không cần phân quyền cụ thể, bạn đưa vào AUTHENTICATED_ENDPOINTS.

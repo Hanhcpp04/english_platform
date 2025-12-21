@@ -47,18 +47,34 @@ public class AdminVocabWordService {
         }
     }
 
+    //get words by topic
+    public APIResponse<Page<AdminVocabWordResponse>> getWordsByTopic(Long topicId, int page, int size) {
+        try {
+            // Kiểm tra topic tồn tại
+            Optional<VocabTopicEntity> topicOpt = vocabTopicRepository.findById(topicId);
+            if (topicOpt.isEmpty()) {
+                return APIResponse.error("Topic không tồn tại");
+            }
+
+            Pageable pageable = PageRequest.of(page, size);
+            Page<VocabWordEntity> wordsPage = vocabWordRepository.findByTopicId(topicId, pageable);
+
+            Page<AdminVocabWordResponse> responsePage = wordsPage.map(this::convertToResponse);
+
+            return APIResponse.success(responsePage);
+
+        } catch (Exception e) {
+            return APIResponse.error("Lỗi truy xuất cơ sở dữ liệu: " + e.getMessage());
+        }
+    }
+
     // thêm từ mới
-    public APIResponse<?> addNewVocabWord(AdminVocabWordRequest request, MultipartFile audioFile, MultipartFile imageFile) {
+    public APIResponse<?> addNewVocabWord(AdminVocabWordRequest request) {
         try {
             // Kiểm tra topic tồn tại
             Optional<VocabTopicEntity> topicOpt = vocabTopicRepository.findById(request.getTopicId());
             if (topicOpt.isEmpty()) {
                 return APIResponse.error("Topic không tồn tại");
-            }
-
-            // lỗi file null
-            if ((audioFile == null || audioFile.isEmpty()) && (imageFile == null || imageFile.isEmpty())) {
-                return APIResponse.error("File audio và image không được để trống");
             }
 
             VocabTopicEntity topic = topicOpt.get();
@@ -73,21 +89,6 @@ public class AdminVocabWordService {
             newWord.setWordType(request.getWordType());
             newWord.setXpReward(request.getXpReward() != null ? request.getXpReward() : 5);
 
-            // Xử lý file audio
-            String audioFileName = UUID.randomUUID().toString() + "_" + audioFile.getOriginalFilename();
-            Path uploadDir = Paths.get("uploads/Word");
-            if (!Files.exists(uploadDir)) Files.createDirectories(uploadDir);
-            Path audioPath = uploadDir.resolve(audioFileName);
-            Files.copy(audioFile.getInputStream(), audioPath, StandardCopyOption.REPLACE_EXISTING);
-            newWord.setAudioUrl(audioFileName);
-
-            // Xử lý file image
-            String imageFileName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
-            if (!Files.exists(uploadDir)) Files.createDirectories(uploadDir);
-            Path imagePath = uploadDir.resolve(imageFileName);
-            Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-            newWord.setImageUrl(imageFileName);
-
             // Lưu từ mới
             vocabWordRepository.save(newWord);
 
@@ -100,15 +101,13 @@ public class AdminVocabWordService {
 
             return APIResponse.success(response);
 
-        } catch (IOException e) {
-            return APIResponse.error("Lỗi xử lý file: " + e.getMessage());
         } catch (Exception e) {
             return APIResponse.error("Lỗi khi lưu dữ liệu: " + e.getMessage());
         }
     }
 
     // sửa từ vựng
-    public APIResponse<?> updateVocabWord(Long id, AdminVocabWordUpdateRequest request, MultipartFile audioFile, MultipartFile imageFile) {
+    public APIResponse<?> updateVocabWord(Long id, AdminVocabWordUpdateRequest request) {
         try {
             Optional<VocabWordEntity> wordOpt = vocabWordRepository.findById(id);
             if (wordOpt.isEmpty()) {
@@ -126,26 +125,6 @@ public class AdminVocabWordService {
             if (request.getWordType() != null) word.setWordType(request.getWordType());
             if (request.getXpReward() != null) word.setXpReward(request.getXpReward());
 
-            // Xử lý file audio mới (nếu có)
-            if (audioFile != null && !audioFile.isEmpty()) {
-                String audioFileName = UUID.randomUUID().toString() + "_" + audioFile.getOriginalFilename();
-                Path audioDir = Paths.get("uploads/AudioWord");
-                if (!Files.exists(audioDir)) Files.createDirectories(audioDir);
-                Path audioPath = audioDir.resolve(audioFileName);
-                Files.copy(audioFile.getInputStream(), audioPath, StandardCopyOption.REPLACE_EXISTING);
-                word.setAudioUrl(audioFileName);
-            }
-
-            // Xử lý file image mới (nếu có)
-            if (imageFile != null && !imageFile.isEmpty()) {
-                String imageFileName = UUID.randomUUID().toString() + "_" + imageFile.getOriginalFilename();
-                Path imageDir = Paths.get("uploads/ImageWord");
-                if (!Files.exists(imageDir)) Files.createDirectories(imageDir);
-                Path imagePath = imageDir.resolve(imageFileName);
-                Files.copy(imageFile.getInputStream(), imagePath, StandardCopyOption.REPLACE_EXISTING);
-                word.setImageUrl(imageFileName);
-            }
-
             vocabWordRepository.save(word);
 
             // Trả về response
@@ -153,8 +132,6 @@ public class AdminVocabWordService {
 
             return APIResponse.success(response);
 
-        } catch (IOException e) {
-            return APIResponse.error("Lỗi xử lý file: " + e.getMessage());
         } catch (Exception e) {
             return APIResponse.error("Lỗi khi cập nhật dữ liệu: " + e.getMessage());
         }
@@ -195,7 +172,7 @@ public class AdminVocabWordService {
         }
     }
 
-    // Helper method to convert VocabWordEntity to AdminVocabWordResponse with full URLs
+    // Helper method to convert VocabWordEntity to AdminVocabWordResponse
     private AdminVocabWordResponse convertToResponse(VocabWordEntity word) {
         return new AdminVocabWordResponse(
                 word.getId(),
@@ -203,8 +180,8 @@ public class AdminVocabWordService {
                 word.getEnglishWord(),
                 word.getVietnameseMeaning(),
                 word.getPronunciation(),
-                fileUploadService.buildFullUrl("Word/" + word.getAudioUrl()),
-                fileUploadService.buildFullUrl("Word/" + word.getImageUrl()),
+                null, // audioUrl - không cần nữa
+                null, // imageUrl - không cần nữa
                 word.getExampleSentence(),
                 word.getExampleTranslation(),
                 word.getWordType(),

@@ -6,12 +6,22 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface VocabUserProgressRepository extends JpaRepository<VocabUserProgress , Long> {
     int countByUserIdAndIsCompletedTrue(Long userId);
+    long countByIsCompleted(Boolean isCompleted);
+    
+    // For Excel Report - count by date range
+    long countByCompletedAtBetween(LocalDateTime startDate, LocalDateTime endDate);
+    
+    // For Excel Report - average accuracy
+    @Query("SELECT AVG(CAST(vup.isCompleted AS int)) * 100 FROM VocabUserProgress vup")
+    Double averageAccuracy();
+    
     // mà một người dùng đã học
     @Query("SELECT COUNT(DISTINCT vup.word.id) FROM VocabUserProgress vup " +
             "WHERE vup.user.id = :userId AND vup.isCompleted = true")

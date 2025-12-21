@@ -25,6 +25,7 @@ public class GrammarExerciseService {
     private final UserRepository userRepository;
     private final UserService userService;
     private final GrammarLessonRepository grammarLessonRepository;
+    private final UserDailyStatsService userDailyStatsService;
 
     /**
      * API 0: Lấy danh sách Exercise Types theo topic và lesson
@@ -120,6 +121,10 @@ public class GrammarExerciseService {
             xpEarned = question.getXpReward() != null ? question.getXpReward() : 5;
             userService.addXP(userId, xpEarned);
             log.info("Added {} XP to user {}", xpEarned, userId);
+            
+            // Cập nhật daily stats
+            userDailyStatsService.recordExerciseDone(user, 1);
+            userDailyStatsService.recordXpEarned(user, xpEarned);
         }
 
         // Cập nhật tiến trình (nếu chưa có)

@@ -15,8 +15,8 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
-        // Tự động xác định đường dẫn dựa trên thư mục hiện tại của project
-        String uploadPath = Paths.get(System.getProperty("user.dir"), uploadDir)
+        // Lấy đường dẫn tuyệt đối của thư mục upload
+        String uploadPath = Paths.get(uploadDir)
                 .toAbsolutePath()
                 .toString()
                 .replace("\\", "/") + "/";

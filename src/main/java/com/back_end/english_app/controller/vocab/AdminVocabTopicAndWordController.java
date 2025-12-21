@@ -32,22 +32,20 @@ public class AdminVocabTopicAndWordController {
     }
 
     //tạo vocab topic mới
-    @PostMapping(value = "/topics/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping("/topics/create")
     public APIResponse<?> addNewVocabTopic(
-            @RequestPart("data") AdminVocabTopicRequest request,
-            @RequestPart("icon") MultipartFile iconFile
+            @RequestBody AdminVocabTopicRequest request
     ){
-        return adminVocabTopicService.addNewVocabTopic(request, iconFile);
+        return adminVocabTopicService.addNewVocabTopic(request);
     }
 
     //update vocab topic
-    @PutMapping(value = "/topics/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping("/topics/update/{id}")
     public APIResponse<?> updateVocabTopic(
             @PathVariable Long id,
-            @RequestPart("data") AdminVocabTopicRequest request,
-            @RequestPart(value = "icon", required = false) MultipartFile iconFile
+            @RequestBody AdminVocabTopicRequest request
     ) {
-        return adminVocabTopicService.updateVocabTopic(id, request, iconFile);
+        return adminVocabTopicService.updateVocabTopic(id, request);
     }
 
     //xóa hoặc khôi phục vocab topic
@@ -70,25 +68,31 @@ public class AdminVocabTopicAndWordController {
         return adminVocabWordService.getAllWords(page, size);
     }
 
-    //create new word
-    @PostMapping(value = "words/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public APIResponse<?> addNewWord(
-            @RequestPart("data") AdminVocabWordRequest request,
-            @RequestPart("audio") MultipartFile audioFile,
-            @RequestPart("image") MultipartFile imageFile
+    //get words by topic
+    @GetMapping("/words/by-topic/{topicId}")
+    public APIResponse<Page<AdminVocabWordResponse>> getWordsByTopic(
+            @PathVariable Long topicId,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size
     ){
-        return adminVocabWordService.addNewVocabWord(request, audioFile, imageFile);
+        return adminVocabWordService.getWordsByTopic(topicId, page, size);
+    }
+
+    //create new word
+    @PostMapping("/words/create")
+    public APIResponse<?> addNewWord(
+            @RequestBody AdminVocabWordRequest request
+    ){
+        return adminVocabWordService.addNewVocabWord(request);
     }
 
     //update word
-    @PutMapping(value = "/words/update/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PutMapping("/words/update/{id}")
     public APIResponse<?> updateWord(
             @PathVariable Long id,
-            @RequestPart("data") AdminVocabWordUpdateRequest request,
-            @RequestPart(value = "audio", required = false) MultipartFile audioFile,
-            @RequestPart(value = "image", required = false) MultipartFile imageFile
+            @RequestBody AdminVocabWordUpdateRequest request
     ) {
-        return adminVocabWordService.updateVocabWord(id, request, audioFile, imageFile);
+        return adminVocabWordService.updateVocabWord(id, request);
     }
 
     //xóa hoặc khôi phục từ vựng

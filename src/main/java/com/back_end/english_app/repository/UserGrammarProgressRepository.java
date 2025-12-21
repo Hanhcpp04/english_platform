@@ -6,8 +6,16 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
+
 @Repository
 public interface UserGrammarProgressRepository extends JpaRepository<UserGrammarProgressEntity, Long> {
+    long countByIsCompletedTrue();
+    
+    // For Excel Report
+    long countByTypeAndIsCompleted(UserGrammarProgressEntity.ProgressType type, Boolean isCompleted);
+    long countByCompletedAtBetween(LocalDateTime startDate, LocalDateTime endDate);
+    
     // Đếm số bài học unique đã hoàn thành
     @Query("SELECT COUNT(DISTINCT g.lesson.id) FROM UserGrammarProgressEntity g WHERE g.user.id = :userId AND g.isCompleted = true")
     int countDistinctLessonsByUserIdAndIsCompletedTrue(@Param("userId") Long userId);

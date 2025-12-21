@@ -42,4 +42,10 @@ public class AdminUserController {
         return adminUserService.deleteOrRestoreUser(id, status);
     }
 
+    //Xem chi tiết profile user
+    @GetMapping("/profile/{userId}")
+    public APIResponse<AdminUserResponse> getUserProfile(@PathVariable Long userId) {
+        return adminUserService.getUserProfile(userId);
+    }
+
 }

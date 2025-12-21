@@ -22,5 +22,7 @@ public interface GrammarQuestionRepository extends JpaRepository<GrammarQuestion
     Integer countByLessonIdAndTypeId(
             @Param("lessonId") Long lessonId,
             @Param("typeId") Long typeId);
+    
+    long countByIsActiveTrue();
 }
 

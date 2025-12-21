@@ -32,6 +32,7 @@ public class GrammarLessonService {
     private final UserRepository userRepository;
     private final GrammarTopicRepository grammarTopicRepository;
     private final BadgeCheckService badgeCheckService;
+    private final UserDailyStatsService userDailyStatsService;
     @Transactional(readOnly = true)
     public GrammarLessonResponseDTO getLessonsWithProgress(Long topicId, Long userId) {
         log.info("Getting lessons for topic {} and user {}", topicId, userId);
@@ -188,6 +189,10 @@ public class GrammarLessonService {
             userRepository.save(user);
             log.info("Awarded {} XP to user {}. Total XP: {} -> {}",
                     xpAwarded, userId, currentXp, user.getTotalXp());
+
+            // Cập nhật daily stats
+            userDailyStatsService.recordGrammarCompleted(user, 1);
+            userDailyStatsService.recordXpEarned(user, xpAwarded);
 
             // 7. Kiểm tra và cập nhật huy hiệu sau khi hoàn thành bài học
             try {

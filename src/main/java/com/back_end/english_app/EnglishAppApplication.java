@@ -3,8 +3,10 @@ package com.back_end.english_app;
 import io.github.cdimascio.dotenv.Dotenv;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cache.annotation.EnableCaching;
 
 @SpringBootApplication
+@EnableCaching
 public class EnglishAppApplication {
 
 	public static void main(String[] args) {

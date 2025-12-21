@@ -15,5 +15,6 @@ public class AdminVocabTopicRequest {
     private String englishName;
     private String name;
     private String description;
+    private String icon;
     private Integer xpReward;
 }

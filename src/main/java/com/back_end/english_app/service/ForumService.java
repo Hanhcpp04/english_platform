@@ -40,6 +40,7 @@ public class ForumService {
     private final UserRepository userRepository;
     private final FileUploadService fileUploadService;
     private final BadgeCheckService badgeCheckService;
+    private final UserDailyStatsService userDailyStatsService;
 
     // ============ POST METHODS ============
 
@@ -141,6 +142,9 @@ public class ForumService {
         }
 
         post.setMedia(mediaList);
+
+        // Cập nhật daily stats
+        userDailyStatsService.recordForumPost(user, 1);
 
         // Check forum badges
         try {
@@ -268,6 +272,9 @@ public class ForumService {
         }
 
         comment = forumCommentRepository.save(comment);
+
+        // Cập nhật daily stats
+        userDailyStatsService.recordForumComment(user, 1);
 
         // Update post comment count
         post.setCommentsCount(post.getCommentsCount() + 1);

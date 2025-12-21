@@ -30,5 +30,7 @@ public interface UserBadgeProgressRepository extends JpaRepository<UserBadgeProg
 
     List<UserBadgeProgressEntity> findByUserIdAndProgressPercentageGreaterThanEqualOrderByProgressPercentageDesc(
         Long userId, Double minPercentage);
+
+    List<UserBadgeProgressEntity> findByUserIdAndBadgeIdIn(Long userId, List<Long> badgeIds);
 }
 

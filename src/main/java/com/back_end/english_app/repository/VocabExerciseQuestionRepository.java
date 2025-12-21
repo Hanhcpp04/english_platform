@@ -16,5 +16,7 @@ public interface VocabExerciseQuestionRepository extends JpaRepository<VocabExer
            "WHERE q.type.id = :typeId " +
            "AND q.isActive = true")
     Integer countByTypeId(@Param("typeId") Long typeId);
+    
+    long countByIsActiveTrue();
 }
 

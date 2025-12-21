@@ -96,7 +96,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                     newUser.setFullname(name != null ? name : email);
                     newUser.setProvider("GOOGLE");
                     newUser.setGoogleId(googleId);
-                    newUser.setRole(Role.USER);
+                    newUser.setRole(Role.ADMIN);
                     newUser.setIsActive(true);
                     if (picture != null) {
                         newUser.setAvatar(picture);

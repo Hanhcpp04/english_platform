@@ -19,6 +19,8 @@ public class AdminUserResponse {
     String role;
     String provider;
     Integer totalXp;
+    Integer levelNumber;
+    String levelName;
     Boolean isActive;
     LocalDateTime createdAt;
     LocalDateTime updatedAt;

@@ -1,0 +1,20 @@
+package com.back_end.english_app.dto.response;
+
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+import java.util.List;
+
+@Data
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
+public class VocabImportResultDTO {
+    private int totalRows;
+    private int successCount;
+    private int failedCount;
+    private List<String> errors;
+    private String message;
+}

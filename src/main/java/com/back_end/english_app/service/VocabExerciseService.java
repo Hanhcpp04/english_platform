@@ -1,7 +1,4 @@
 package com.back_end.english_app.service;
-
-
-
 import com.back_end.english_app.dto.request.vocabExercise.SubmitAnswerRequest;
 import com.back_end.english_app.dto.respones.vocabExercise.*;
 import com.back_end.english_app.entity.*;
@@ -26,6 +23,7 @@ public class VocabExerciseService {
     private final VocabExerciseQuestionRepository questionRepository;
     private final VocabExerciseTypeRepository typeRepository;
     private final VocabTopicRepository topicRepository;
+    private final UserDailyStatsService userDailyStatsService;
 
     // lấy câu hỏi theo từng loại và thuộc về topic nào của user nào
     public List<ExerciseTypeDTO> getExerciseTypesByTopic(Integer topicId, Integer userId) {
@@ -153,6 +151,12 @@ public class VocabExerciseService {
                         questionId,
                         topicId
                 );
+
+                // Cập nhật daily stats
+                userDailyStatsService.recordExerciseDone(user, 1);
+                if (xpEarned > 0) {
+                    userDailyStatsService.recordXpEarned(user, xpEarned);
+                }
 
                 // Kiểm tra và cập nhật huy hiệu sau khi hoàn thành bài tập từ vựng
                 try {

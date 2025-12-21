@@ -11,6 +11,6 @@ public interface ForumPostViewRepository extends JpaRepository<ForumPostViewEnti
 
     boolean existsByPostIdAndIpAddressAndViewedAtAfter(Long postId, String ipAddress, java.time.LocalDateTime after);
 
-    long countByPostId(Long postId);
+    Integer countByPostId(Long postId);
 }
 

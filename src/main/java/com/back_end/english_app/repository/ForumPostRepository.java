@@ -81,4 +81,27 @@ public interface ForumPostRepository extends JpaRepository<ForumPostEntity, Long
             @Param("startDate") LocalDateTime startDate,
             Pageable pageable
     );
+    
+    @Query("SELECT p FROM ForumPostEntity p WHERE p.isActive = true ORDER BY p.createdAt DESC")
+    java.util.List<ForumPostEntity> findTop5ByIsActiveTrueOrderByCreatedAtDesc();
+
+    // Admin methods
+    Page<ForumPostEntity> findByIsActive(Boolean isActive, Pageable pageable);
+    
+    Page<ForumPostEntity> findByIsActiveAndTitleContainingIgnoreCaseOrContentContainingIgnoreCase(
+            Boolean isActive, String titleSearch, String contentSearch, Pageable pageable);
+    
+    Page<ForumPostEntity> findByTitleContainingIgnoreCaseOrContentContainingIgnoreCase(
+            String titleSearch, String contentSearch, Pageable pageable);
+    
+    Long countByIsActive(Boolean isActive);
+    
+    long countByCreatedAtBetween(LocalDateTime start, LocalDateTime end);
+    
+    // For Excel Report
+    @Query("SELECT SUM(p.likesCount) FROM ForumPostEntity p")
+    Long sumLikesCount();
+    
+    @Query("SELECT SUM(p.commentsCount) FROM ForumPostEntity p")
+    Long sumCommentsCount();
 }

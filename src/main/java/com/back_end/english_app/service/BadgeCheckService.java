@@ -5,6 +5,7 @@ import com.back_end.english_app.entity.*;
 import com.back_end.english_app.repository.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,13 +33,22 @@ public class BadgeCheckService {
     private final ForumPostRepository forumPostRepository;
     private final UserStreakRepository userStreakRepository;
 
+    /**
+     * Cache badges theo condition type để tránh query DB liên tục
+     */
+    @Cacheable(value = "badgesByType", key = "#type")
+    private List<BadgeEntity> getBadgesByType(ConditionType type) {
+        log.debug("Loading badges from DB for type: {}", type);
+        return badgeRepository.findByConditionTypeAndIsActiveTrue(type);
+    }
+
     @Transactional
     public void checkAndUpdateBadges(Long userId, String conditionType) {
         log.info("Checking badges for user {} with condition type: {}", userId, conditionType);
 
-        // 1. Lấy tất cả badges active theo loại
+        // 1. Lấy tất cả badges active theo loại (sử dụng cache)
         ConditionType type = ConditionType.valueOf(conditionType.toUpperCase());
-        List<BadgeEntity> badges = badgeRepository.findByConditionTypeAndIsActiveTrue(type);
+        List<BadgeEntity> badges = getBadgesByType(type);
 
         if (badges.isEmpty()) {
             log.debug("No active badges found for condition type: {}", conditionType);
@@ -49,10 +59,27 @@ public class BadgeCheckService {
         int currentValue = calculateUserValue(userId, conditionType);
         log.debug("User {} current value for {}: {}", userId, conditionType, currentValue);
 
-        // 3. Kiểm tra từng badge
+        // 3. OPTIMIZATION: Batch load user badges và progress một lần
+        List<Long> badgeIds = badges.stream().map(BadgeEntity::getId).toList();
+        
+        // Load tất cả user badges của user cho các badge IDs này
+        List<UserBadgeEntity> userBadges = userBadgeRepository.findByUserIdAndBadgeIdIn(userId, badgeIds);
+        List<Long> earnedBadgeIds = userBadges.stream()
+                .map(ub -> ub.getBadge().getId())
+                .toList();
+        
+        // Load tất cả badge progress của user cho các badge IDs này
+        List<UserBadgeProgressEntity> progressList = userBadgeProgressRepository.findByUserIdAndBadgeIdIn(userId, badgeIds);
+        java.util.Map<Long, UserBadgeProgressEntity> progressMap = progressList.stream()
+                .collect(java.util.stream.Collectors.toMap(
+                    UserBadgeProgressEntity::getBadgeId,
+                    p -> p
+                ));
+
+        // 4. Kiểm tra từng badge với data đã load
         for (BadgeEntity badge : badges) {
             try {
-                processBadge(userId, badge, currentValue);
+                processBadgeOptimized(userId, badge, currentValue, earnedBadgeIds, progressMap);
             } catch (Exception e) {
                 log.error("Error processing badge {} for user {}: {}",
                     badge.getId(), userId, e.getMessage(), e);
@@ -61,7 +88,39 @@ public class BadgeCheckService {
     }
 
     /**
-     * Xử lý một badge cụ thể
+     * Xử lý một badge cụ thể - Optimized version
+     */
+    private void processBadgeOptimized(Long userId, BadgeEntity badge, int currentValue,
+                                       List<Long> earnedBadgeIds,
+                                       java.util.Map<Long, UserBadgeProgressEntity> progressMap) {
+        // Kiểm tra xem user đã có badge này chưa (từ data đã load)
+        boolean alreadyEarned = earnedBadgeIds.contains(badge.getId());
+
+        if (alreadyEarned) {
+            log.debug("User {} already earned badge {}", userId, badge.getId());
+            return;
+        }
+
+        // Lấy progress từ map (nếu có)
+        UserBadgeProgressEntity progress = progressMap.get(badge.getId());
+        
+        // OPTIMIZATION: Nếu progress đã 100% thì không cần update lại
+        if (progress != null && progress.getProgressPercentage().compareTo(BigDecimal.valueOf(100)) >= 0) {
+            log.debug("Badge progress already at 100%, skipping update");
+            return;
+        }
+
+        // Cập nhật progress
+        updateBadgeProgressOptimized(userId, badge, currentValue, progress);
+
+        // Nếu đạt điều kiện, trao badge
+        if (currentValue >= badge.getConditionValue()) {
+            awardBadge(userId, badge);
+        }
+    }
+
+    /**
+     * Phương thức cũ giữ lại để backward compatibility
      */
     private void processBadge(Long userId, BadgeEntity badge, int currentValue) {
         // Kiểm tra xem user đã có badge này chưa
@@ -118,6 +177,41 @@ public class BadgeCheckService {
             log.error("Error calculating user value for type {}: {}", conditionType, e.getMessage(), e);
             return 0;
         }
+    }
+
+    /**
+     * Cập nhật tiến độ badge của user - Optimized version
+     */
+    private void updateBadgeProgressOptimized(Long userId, BadgeEntity badge, int currentValue, 
+                                              UserBadgeProgressEntity existingProgress) {
+        UserBadgeProgressEntity progress = existingProgress;
+        
+        if (progress == null) {
+            progress = new UserBadgeProgressEntity();
+            progress.setUserId(userId);
+            progress.setBadgeId(badge.getId());
+        }
+
+        progress.setCurrentValue(currentValue);
+        progress.setTargetValue(badge.getConditionValue());
+
+        // Tính phần trăm
+        BigDecimal percentage = BigDecimal.valueOf(currentValue)
+                .divide(BigDecimal.valueOf(badge.getConditionValue()), 4, RoundingMode.HALF_UP)
+                .multiply(BigDecimal.valueOf(100))
+                .setScale(2, RoundingMode.HALF_UP);
+
+        // Cap at 100%
+        if (percentage.compareTo(BigDecimal.valueOf(100)) > 0) {
+            percentage = BigDecimal.valueOf(100);
+        }
+        progress.setProgressPercentage(percentage);
+
+        userBadgeProgressRepository.save(progress);
+
+        log.debug("Updated badge progress for user {} - badge {}: {}/{} ({}%)",
+            userId, badge.getId(), currentValue, badge.getConditionValue(),
+            percentage);
     }
 
     /**

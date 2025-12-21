@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Repository
@@ -16,4 +17,15 @@ public interface WritingPromptRepository extends JpaRepository<WritingPromptEnti
 
     // Count completed prompts for a user
     long countByUserIdAndIsCompletedTrue(Long userId);
+    
+    long countByIsCompletedTrue();
+    
+    // For Excel Report
+    long countBySubmittedAtBetween(LocalDateTime startDate, LocalDateTime endDate);
+    
+    @Query("SELECT AVG(p.overallScore) FROM WritingPromptEntity p WHERE p.isCompleted = true AND p.overallScore IS NOT NULL")
+    Double averageOverallScore();
+    
+    @Query("SELECT COUNT(p) FROM WritingPromptEntity p WHERE p.writingTask.id = :taskId")
+    long countByTaskId(@Param("taskId") Integer taskId);
 }

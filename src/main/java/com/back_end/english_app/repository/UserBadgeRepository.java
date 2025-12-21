@@ -32,4 +32,8 @@ public interface UserBadgeRepository extends JpaRepository<UserBadgeEntity , Lon
     @Query("SELECT ub FROM UserBadgeEntity ub " +
             "WHERE ub.user.id = :userId AND ub.badge.id = :badgeId")
     Optional<UserBadgeEntity> findByUserIdAndBadgeId(@Param("userId") Long userId, @Param("badgeId") Long badgeId);
+
+    @Query("SELECT ub FROM UserBadgeEntity ub " +
+            "WHERE ub.user.id = :userId AND ub.badge.id IN :badgeIds")
+    List<UserBadgeEntity> findByUserIdAndBadgeIdIn(@Param("userId") Long userId, @Param("badgeIds") List<Long> badgeIds);
 }

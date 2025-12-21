@@ -36,6 +36,7 @@ public class WritingService {
     private final GeminiService geminiService;
     private final BadgeCheckService badgeCheckService;
     private final ObjectMapper objectMapper;
+    private final UserDailyStatsService userDailyStatsService;
 
     /**
      * Get all active writing topics
@@ -179,6 +180,10 @@ public class WritingService {
                 Integer currentXp = user.getTotalXp() != null ? user.getTotalXp() : 0;
                 user.setTotalXp(currentXp + xpReward);
                 userRepository.save(user);
+                
+                // Cập nhật daily stats
+                userDailyStatsService.recordWritingSubmitted(user, 1);
+                userDailyStatsService.recordXpEarned(user, xpReward);
 
                 // 8. Check and update badges
                 try {
