@@ -12,7 +12,7 @@ import com.back_end.english_app.dto.respones.forum.PostResponse;
 import com.back_end.english_app.dto.respones.forum.RecentPostResponse;
 import com.back_end.english_app.entity.UserEntity;
 import com.back_end.english_app.repository.UserRepository;
-import com.back_end.english_app.service.ForumService;
+import com.back_end.english_app.service.user.ForumService;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;

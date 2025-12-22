@@ -2,7 +2,7 @@ package com.back_end.english_app.controller.grammar;
 
 import com.back_end.english_app.config.APIResponse;
 import com.back_end.english_app.dto.respones.grammar.GrammarStatsDTO;
-import com.back_end.english_app.service.GrammarStatsService;
+import com.back_end.english_app.service.user.GrammarStatsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;

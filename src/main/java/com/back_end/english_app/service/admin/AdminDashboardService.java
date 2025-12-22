@@ -1,4 +1,4 @@
-package com.back_end.english_app.service;
+package com.back_end.english_app.service.admin;
 
 import com.back_end.english_app.dto.respones.admin.AdminDashboardDTO;
 import com.back_end.english_app.entity.UserEntity;

@@ -1,7 +1,7 @@
-package com.back_end.english_app.service;
+package com.back_end.english_app.service.user;
 
 import com.back_end.english_app.dto.request.VocabWordImportDTO;
-import com.back_end.english_app.dto.response.VocabImportResultDTO;
+import com.back_end.english_app.dto.respones.vocab.VocabImportResultDTO;
 import com.back_end.english_app.entity.VocabTopicEntity;
 import com.back_end.english_app.entity.VocabWordEntity;
 import com.back_end.english_app.repository.VocabTopicRepository;

@@ -3,14 +3,12 @@ package com.back_end.english_app.controller.badge;
 import com.back_end.english_app.config.APIResponse;
 import com.back_end.english_app.dto.request.badge.AdminBadgeRequest;
 import com.back_end.english_app.dto.respones.badge.AdminBadgeResponse;
-import com.back_end.english_app.service.AdminBadgeService;
+import com.back_end.english_app.service.admin.AdminBadgeService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/admin-badges")

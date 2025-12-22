@@ -1,4 +1,4 @@
-package com.back_end.english_app.service;
+package com.back_end.english_app.service.user;
 import com.back_end.english_app.dto.request.vocabExercise.SubmitAnswerRequest;
 import com.back_end.english_app.dto.respones.vocabExercise.*;
 import com.back_end.english_app.entity.*;

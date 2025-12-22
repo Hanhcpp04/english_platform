@@ -2,14 +2,13 @@ package com.back_end.english_app.controller;
 
 import com.back_end.english_app.dto.request.ExcelReportRequest;
 import com.back_end.english_app.config.APIResponse;
-import com.back_end.english_app.service.ExcelReportService;
+import com.back_end.english_app.service.user.EnterpriseExcelReportService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
@@ -23,7 +22,7 @@ import java.time.format.DateTimeFormatter;
 @Slf4j
 public class ReportController {
 
-    private final ExcelReportService excelReportService;
+    private final EnterpriseExcelReportService excelReportService;
 
     @GetMapping("/export")
     public ResponseEntity<?> exportExcelReport(
@@ -78,12 +77,10 @@ public class ReportController {
     @GetMapping("/types")
     public ResponseEntity<APIResponse<String[]>> getReportTypes() {
         String[] reportTypes = {
-                "OVERALL",
-                "USER_ACTIVITY", 
-                "VOCABULARY",
-                "GRAMMAR",
-                "WRITING",
-                "FORUM"
+                "OVERALL",           // All sheets with complete analysis
+                "USER_ACTIVITY",     // Dashboard + User Performance sheets
+                "VOCABULARY",        // Retention analysis for vocabulary topics
+                "WRITING"            // Writing analysis with AI scores
         };
         
         return ResponseEntity.ok(APIResponse.<String[]>builder()

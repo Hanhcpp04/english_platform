@@ -4,7 +4,7 @@ import com.back_end.english_app.config.APIResponse;
 import com.back_end.english_app.dto.request.level.LevelRequest;
 import com.back_end.english_app.dto.request.level.LevelUpdateRequest;
 import com.back_end.english_app.entity.LevelEntity;
-import com.back_end.english_app.service.AdminLevelService;
+import com.back_end.english_app.service.admin.AdminLevelService;
 import org.springframework.web.bind.annotation.RequestBody;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

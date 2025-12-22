@@ -6,7 +6,7 @@ import com.back_end.english_app.dto.respones.writing.GradingResultResponse;
 import com.back_end.english_app.dto.respones.writing.WritingPromptResponse;
 import com.back_end.english_app.dto.respones.writing.WritingTaskResponse;
 import com.back_end.english_app.dto.respones.writing.WritingTopicResponse;
-import com.back_end.english_app.service.WritingService;
+import com.back_end.english_app.service.user.WritingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

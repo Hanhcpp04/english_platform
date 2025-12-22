@@ -4,7 +4,7 @@ import com.back_end.english_app.config.APIResponse;
 import com.back_end.english_app.dto.respones.dashboard.DashboardSummaryDTO;
 import com.back_end.english_app.entity.UserEntity;
 import com.back_end.english_app.repository.UserRepository;
-import com.back_end.english_app.service.DashboardService;
+import com.back_end.english_app.service.user.DashboardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;

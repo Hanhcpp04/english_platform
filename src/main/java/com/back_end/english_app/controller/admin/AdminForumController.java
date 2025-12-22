@@ -4,7 +4,7 @@ import com.back_end.english_app.config.APIResponse;
 import com.back_end.english_app.dto.respones.forum.AdminForumCommentResponse;
 import com.back_end.english_app.dto.respones.forum.AdminForumPostResponse;
 import com.back_end.english_app.dto.respones.forum.AdminForumStatisticsResponse;
-import com.back_end.english_app.service.AdminForumService;
+import com.back_end.english_app.service.admin.AdminForumService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;

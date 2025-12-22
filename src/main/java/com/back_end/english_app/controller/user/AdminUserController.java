@@ -3,14 +3,10 @@ package com.back_end.english_app.controller.user;
 import com.back_end.english_app.config.APIResponse;
 import com.back_end.english_app.dto.respones.user.AdminUserResponse;
 import com.back_end.english_app.entity.Role;
-import com.back_end.english_app.service.AdminUserService;
+import com.back_end.english_app.service.admin.AdminUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/admin-users")

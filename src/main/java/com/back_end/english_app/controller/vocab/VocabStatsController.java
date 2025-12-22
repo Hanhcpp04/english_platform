@@ -5,7 +5,7 @@ import com.back_end.english_app.dto.respones.dashboard.TopicWithProgressDTO;
 import com.back_end.english_app.dto.respones.dashboard.VocabStatsDTO;
 import com.back_end.english_app.dto.respones.dashboard.VocabTopicDTO;
 import com.back_end.english_app.repository.VocabTopicRepository;
-import com.back_end.english_app.service.VocabStatsService;
+import com.back_end.english_app.service.user.VocabStatsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;

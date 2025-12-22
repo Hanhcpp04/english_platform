@@ -1,10 +1,11 @@
-package com.back_end.english_app.service;
+package com.back_end.english_app.service.admin;
 
 import com.back_end.english_app.config.APIResponse;
 import com.back_end.english_app.dto.request.badge.AdminBadgeRequest;
 import com.back_end.english_app.dto.respones.badge.AdminBadgeResponse;
 import com.back_end.english_app.entity.BadgeEntity;
 import com.back_end.english_app.repository.BadgeRepository;
+import com.back_end.english_app.service.user.FileUploadService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -13,13 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor

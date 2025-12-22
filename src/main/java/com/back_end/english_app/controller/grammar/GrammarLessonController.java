@@ -4,7 +4,7 @@ import com.back_end.english_app.config.APIResponse;
 import com.back_end.english_app.dto.request.grammar.CompleteLessonRequest;
 import com.back_end.english_app.dto.respones.grammar.CompleteLessonResponseDTO;
 import com.back_end.english_app.dto.respones.grammar.GrammarLessonResponseDTO;
-import com.back_end.english_app.service.GrammarLessonService;
+import com.back_end.english_app.service.user.GrammarLessonService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

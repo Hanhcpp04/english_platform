@@ -6,7 +6,7 @@ import com.back_end.english_app.dto.respones.vocab.VocabWordResponse;
 import com.back_end.english_app.entity.UserEntity;
 import com.back_end.english_app.exception.ResourceNotFoundException;
 import com.back_end.english_app.repository.UserRepository;
-import com.back_end.english_app.service.VocabWordService;
+import com.back_end.english_app.service.user.VocabWordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 

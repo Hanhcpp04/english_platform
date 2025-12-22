@@ -1,8 +1,8 @@
 package com.back_end.english_app.controller;
 
 import com.back_end.english_app.config.APIResponse;
-import com.back_end.english_app.dto.response.VocabImportResultDTO;
-import com.back_end.english_app.service.VocabExcelService;
+import com.back_end.english_app.dto.respones.vocab.VocabImportResultDTO;
+import com.back_end.english_app.service.user.VocabExcelService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;

@@ -3,7 +3,7 @@ package com.back_end.english_app.controller.grammar;
 import com.back_end.english_app.config.APIResponse;
 import com.back_end.english_app.dto.request.grammar.SubmitAnswerRequest;
 import com.back_end.english_app.dto.respones.grammar.*;
-import com.back_end.english_app.service.GrammarExerciseService;
+import com.back_end.english_app.service.user.GrammarExerciseService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

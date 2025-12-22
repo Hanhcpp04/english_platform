@@ -1,4 +1,4 @@
-package com.back_end.english_app.service;
+package com.back_end.english_app.service.user;
 
 import com.back_end.english_app.entity.UserDailyStatsEntity;
 import com.back_end.english_app.entity.UserEntity;

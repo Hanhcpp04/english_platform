@@ -6,13 +6,11 @@ import com.back_end.english_app.dto.request.vocab.AdminVocabWordRequest;
 import com.back_end.english_app.dto.request.vocab.AdminVocabWordUpdateRequest;
 import com.back_end.english_app.dto.respones.vocab.AdminVocabTopicResponse;
 import com.back_end.english_app.dto.respones.vocab.AdminVocabWordResponse;
-import com.back_end.english_app.service.AdminVocabTopicService;
-import com.back_end.english_app.service.AdminVocabWordService;
+import com.back_end.english_app.service.admin.AdminVocabTopicService;
+import com.back_end.english_app.service.admin.AdminVocabWordService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/admin-vocab")

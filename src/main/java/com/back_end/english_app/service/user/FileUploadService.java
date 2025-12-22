@@ -1,4 +1,4 @@
-package com.back_end.english_app.service;
+package com.back_end.english_app.service.user;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

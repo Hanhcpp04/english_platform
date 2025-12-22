@@ -1,4 +1,4 @@
-package com.back_end.english_app.service;
+package com.back_end.english_app.service.user;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

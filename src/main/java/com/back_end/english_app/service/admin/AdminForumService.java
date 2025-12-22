@@ -1,11 +1,10 @@
-package com.back_end.english_app.service;
+package com.back_end.english_app.service.admin;
 
 import com.back_end.english_app.dto.respones.forum.AdminForumCommentResponse;
 import com.back_end.english_app.dto.respones.forum.AdminForumPostResponse;
 import com.back_end.english_app.dto.respones.forum.AdminForumStatisticsResponse;
 import com.back_end.english_app.entity.ForumCommentEntity;
 import com.back_end.english_app.entity.ForumPostEntity;
-import com.back_end.english_app.entity.ForumPostViewEntity;
 import com.back_end.english_app.exception.ResourceNotFoundException;
 import com.back_end.english_app.repository.*;
 import jakarta.transaction.Transactional;

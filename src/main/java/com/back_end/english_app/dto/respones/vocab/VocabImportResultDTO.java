@@ -1,4 +1,4 @@
-package com.back_end.english_app.dto.response;
+package com.back_end.english_app.dto.respones.vocab;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

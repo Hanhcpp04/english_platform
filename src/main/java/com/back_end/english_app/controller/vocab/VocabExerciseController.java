@@ -1,11 +1,9 @@
 package com.back_end.english_app.controller.vocab;
 
 import com.back_end.english_app.config.APIResponse;
-import com.back_end.english_app.config.AppConfig;
 import com.back_end.english_app.dto.request.vocabExercise.SubmitAnswerRequest;
-import com.back_end.english_app.dto.request.vocabExercise.SubmitBatchRequest;
 import com.back_end.english_app.dto.respones.vocabExercise.*;
-import com.back_end.english_app.service.VocabExerciseService;
+import com.back_end.english_app.service.user.VocabExerciseService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;

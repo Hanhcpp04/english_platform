@@ -2,7 +2,7 @@ package com.back_end.english_app.controller.admin;
 
 import com.back_end.english_app.config.APIResponse;
 import com.back_end.english_app.dto.respones.admin.AdminDashboardDTO;
-import com.back_end.english_app.service.AdminDashboardService;
+import com.back_end.english_app.service.admin.AdminDashboardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
