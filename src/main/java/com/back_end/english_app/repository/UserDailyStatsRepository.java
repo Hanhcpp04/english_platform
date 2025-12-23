@@ -18,6 +18,9 @@ public interface UserDailyStatsRepository extends JpaRepository<UserDailyStatsEn
     
     boolean existsByUserIdAndDateBetweenAndIsStudyDayTrue(Long userId, LocalDate startDate, LocalDate endDate);
     
+    @Query("SELECT COUNT(DISTINCT uds.user.id) FROM UserDailyStatsEntity uds WHERE uds.date BETWEEN :startDate AND :endDate AND uds.isStudyDay = true")
+    Long countDistinctActiveUsersBetweenDates(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+    
     @Query("SELECT SUM(uds.vocabLearned) FROM UserDailyStatsEntity uds WHERE uds.date BETWEEN :startDate AND :endDate")
     Long sumVocabLearnedBetweenDates(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
     

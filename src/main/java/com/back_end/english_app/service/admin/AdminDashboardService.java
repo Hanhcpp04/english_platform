@@ -163,13 +163,12 @@ public class AdminDashboardService {
             java.time.LocalDate monthStartDate = monthStart.toLocalDate();
             java.time.LocalDate monthEndDate = monthEnd.toLocalDate();
             
-            long activeUsers = userRepository.findAll().stream()
-                    .filter(u -> {
-                        // Check nếu user có bất kỳ study day nào trong tháng
-                        return userDailyStatsRepository.existsByUserIdAndDateBetweenAndIsStudyDayTrue(
-                            u.getId(), monthStartDate, monthEndDate);
-                    })
-                    .count();
+            Long activeUsersCount = userDailyStatsRepository.countDistinctActiveUsersBetweenDates(
+                monthStartDate, monthEndDate);
+            long activeUsers = activeUsersCount != null ? activeUsersCount : 0L;
+            
+            log.info("Month: {} | Start: {} | End: {} | Total Users: {} | Active Users: {}", 
+                    monthStart.format(monthFormatter), monthStartDate, monthEndDate, usersInMonth, activeUsers);
 
             growthData.add(AdminDashboardDTO.UserGrowthDataDTO.builder()
                     .month(monthStart.format(monthFormatter))
