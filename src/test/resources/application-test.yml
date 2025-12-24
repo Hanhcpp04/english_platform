@@ -1,0 +1,36 @@
+server:
+  port: 8088
+  servlet:
+    context-path: /api/v1
+
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/english_platform?useSSL=false&serverTimezone=UTC
+    username: root
+    password: root
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+        
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: dummy-client-id
+            client-secret: dummy-client-secret
+            scope:
+              - openid
+              - profile
+              - email
+            redirect-uri: "http://localhost:8088/api/v1/login/oauth2/code/{registrationId}"
+            
+jwt:
+  secret: HaHoangAnh29092004_haui_cntt_very_secure_secret_key_2025

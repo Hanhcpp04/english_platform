@@ -3,6 +3,7 @@ package com.back_end.english_app;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -10,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Simple integration test to verify Spring Boot context loads successfully
  */
 @SpringBootTest
+@ActiveProfiles("test")
 @DisplayName("Application Context Tests")
 class ApplicationContextTest {
 
