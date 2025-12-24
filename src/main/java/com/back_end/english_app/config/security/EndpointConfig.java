@@ -128,6 +128,20 @@ public class EndpointConfig {
             new SecuredEndpoint("/admin-vocab/excel/template", HttpMethod.GET),
             new SecuredEndpoint("/admin-vocab/excel/import", HttpMethod.POST),
 
+            //vocab exercise type
+            new SecuredEndpoint("/admin-vocab/exercise-types/getAll", HttpMethod.GET),
+            new SecuredEndpoint("/admin-vocab/exercise-types/create", HttpMethod.POST),
+            new SecuredEndpoint("/admin-vocab/exercise-types/update/{id}", HttpMethod.PUT),
+            new SecuredEndpoint("/admin-vocab/exercise-types/delete-restore/{id}/{status}", HttpMethod.PUT), //status: delete hoặc restore
+
+            //vocab exercise question
+            new SecuredEndpoint("/admin-vocab/exercise-questions/getAll", HttpMethod.GET),
+            new SecuredEndpoint("/admin-vocab/exercise-questions/by-type/*", HttpMethod.GET),
+            new SecuredEndpoint("/admin-vocab/exercise-questions/by-topic/*", HttpMethod.GET),
+            new SecuredEndpoint("/admin-vocab/exercise-questions/create", HttpMethod.POST),
+            new SecuredEndpoint("/admin-vocab/exercise-questions/update/{id}", HttpMethod.PUT),
+            new SecuredEndpoint("/admin-vocab/exercise-questions/delete-restore/{id}/{status}", HttpMethod.PUT), //status: delete hoặc restore
+
             //grammar topic
             new SecuredEndpoint("/admin-grammar/topics/getAll", HttpMethod.GET),
             new SecuredEndpoint("/admin-grammar/topics/create", HttpMethod.POST),
@@ -140,6 +154,21 @@ public class EndpointConfig {
             new SecuredEndpoint("/admin-grammar/lessons/create", HttpMethod.POST),
             new SecuredEndpoint("/admin-grammar/lessons/update/{id}", HttpMethod.PUT),
             new SecuredEndpoint("/admin-grammar/lessons/delete-restore/{id}/{status}", HttpMethod.PUT), //status: delete hoặc restore
+
+            //grammar exercise type
+            new SecuredEndpoint("/admin-grammar/exercise-types/getAll", HttpMethod.GET),
+            new SecuredEndpoint("/admin-grammar/exercise-types/by-topic/*", HttpMethod.GET),
+            new SecuredEndpoint("/admin-grammar/exercise-types/create", HttpMethod.POST),
+            new SecuredEndpoint("/admin-grammar/exercise-types/update/{id}", HttpMethod.PUT),
+            new SecuredEndpoint("/admin-grammar/exercise-types/delete-restore/{id}/{status}", HttpMethod.PUT), //status: delete hoặc restore
+
+            //grammar exercise question
+            new SecuredEndpoint("/admin-grammar/exercise-questions/getAll", HttpMethod.GET),
+            new SecuredEndpoint("/admin-grammar/exercise-questions/by-type/*", HttpMethod.GET),
+            new SecuredEndpoint("/admin-grammar/exercise-questions/by-lesson/*", HttpMethod.GET),
+            new SecuredEndpoint("/admin-grammar/exercise-questions/create", HttpMethod.POST),
+            new SecuredEndpoint("/admin-grammar/exercise-questions/update/{id}", HttpMethod.PUT),
+            new SecuredEndpoint("/admin-grammar/exercise-questions/delete-restore/{id}/{status}", HttpMethod.PUT), //status: delete hoặc restore
 
             //writing topic
             new SecuredEndpoint("/admin-writing/topics/getAll", HttpMethod.GET),
