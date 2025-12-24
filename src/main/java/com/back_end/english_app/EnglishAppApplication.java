@@ -16,7 +16,6 @@ public class EnglishAppApplication {
 					.directory("./")
 					.ignoreIfMissing()
 					.load();
-			
 			// Set environment variables from .env
 			dotenv.entries().forEach(entry -> {
 				System.setProperty(entry.getKey(), entry.getValue());
