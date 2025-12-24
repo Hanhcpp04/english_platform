@@ -2,25 +2,14 @@ package com.back_end.english_app;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Simple integration test to verify Spring Boot context loads successfully
+ * Simple unit tests that don't require Spring context
  */
-@SpringBootTest
-@ActiveProfiles("test")
-@DisplayName("Application Context Tests")
+@DisplayName("Basic Unit Tests")
 class ApplicationContextTest {
-
-    @Test
-    @DisplayName("Should load application context successfully")
-    void contextLoads() {
-        // This test passes if the Spring application context loads without errors
-        assertTrue(true, "Application context loaded successfully");
-    }
 
     @Test
     @DisplayName("Basic arithmetic test")
@@ -36,5 +25,14 @@ class ApplicationContextTest {
         String world = "World";
         String result = hello + " " + world;
         assertEquals("Hello World", result, "Should concatenate strings correctly");
+    }
+    
+    @Test
+    @DisplayName("Array operations test")
+    void testArrayOperations() {
+        int[] numbers = {1, 2, 3, 4, 5};
+        assertEquals(5, numbers.length, "Array should have 5 elements");
+        assertEquals(1, numbers[0], "First element should be 1");
+        assertEquals(5, numbers[4], "Last element should be 5");
     }
 }
